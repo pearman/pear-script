@@ -2,7 +2,7 @@
 
 ## Key Concepts
 
-* **Everything is an object (table) **, including primitives and blocks
+* **Everything is an object (table)**, including primitives and blocks
 * **Only one data-structure**, the table, removing the confusion between arrays and maps
 * **Immutability**, everything is pass-by-value
 * **All blocks return the value of the last statement**
