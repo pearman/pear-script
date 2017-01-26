@@ -79,7 +79,7 @@ Since a number is an object, we can extend its functionality by adding additiona
   div2:  (){ value./(2) }
 ])
 
-Console.log(num.plus1()) // Prints "4"
-Console.log(num.div2())  // Prints "1.5"
+num.plus1().print() // Prints "4"
+num.div2().print()  // Prints "1.5"
 ```
 
