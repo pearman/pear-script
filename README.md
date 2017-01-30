@@ -21,7 +21,7 @@ Since all operators are methods, an editor would be able to **auto-complete all 
 Blocks are like λ functions in other languages except for they themselves are tables. In the example bellow we have assigned the block, ``λ(x,y) = x / y`` , to the key ``div``. 
 
 ```typescript
-div: (x y){ return x./(y) }
+div: (x y) { return x./(y) }
 ```
 To call the block we can use the syntax bellow. Notice that the arguments can be **entered in order** or **by key**.
 ```typescript
