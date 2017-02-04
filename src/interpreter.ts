@@ -6,9 +6,15 @@ let grammar = require('./grammar/grammar.js');
 
 export function interpret(prog) {
     let parser =  new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
-    parser.feed(prog);
-    let parseTree = parser.results;
     let lastOutput = null;
+    let parseTree = {};
+    try {
+        parser.feed(prog);
+        parseTree = parser.results;
+    } catch (err) {
+        console.log(chalk.red('Parsing error!'));
+        lastOutput = err;
+    }
     console.log(JSON.stringify(parseTree, null, 2));
     //parseTree.forEach(vm.execute);
     return lastOutput;

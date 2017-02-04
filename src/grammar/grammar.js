@@ -135,44 +135,42 @@ var grammar = {
             return JSON.parse("\""+d.join("")+"\"");
         }
         },
-    {"name": "strescape", "symbols": [/["'\\\/bfnrt]/], "postprocess": id},
+    {"name": "strescape", "symbols": [/["'\\/bfnrt]/], "postprocess": id},
     {"name": "strescape", "symbols": [{"literal":"u"}, /[a-fA-F0-9]/, /[a-fA-F0-9]/, /[a-fA-F0-9]/, /[a-fA-F0-9]/], "postprocess": 
         function(d) {
             return d.join("");
         }
         },
-    {"name": "Main", "symbols": ["_", "Prog"], "postprocess": d => d[1]},
+    {"name": "Main", "symbols": ["_", "Prog", "_"], "postprocess": d => d[1]},
     {"name": "Prog$ebnf$1", "symbols": ["Statement"]},
     {"name": "Prog$ebnf$1", "symbols": ["Statement", "Prog$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
     {"name": "Prog", "symbols": ["Prog$ebnf$1"]},
-    {"name": "Statement", "symbols": ["Block", "_"], "postprocess": d => d[0]},
-    {"name": "Statement", "symbols": ["Assignment", "_"], "postprocess": d => d[0]},
-    {"name": "Statement", "symbols": ["Chain", "_"], "postprocess": d => d[0]},
+    {"name": "Statement", "symbols": ["Block"], "postprocess": d => d[0]},
+    {"name": "Statement", "symbols": ["Assignment"], "postprocess": d => d[0]},
+    {"name": "Statement", "symbols": ["Chain"], "postprocess": d => d[0]},
     {"name": "Block$ebnf$1", "symbols": []},
     {"name": "Block$ebnf$1", "symbols": ["Arg", "Block$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
     {"name": "Block$subexpression$1", "symbols": ["Prog"]},
     {"name": "Block$subexpression$1", "symbols": []},
-    {"name": "Block", "symbols": [{"literal":"("}, "_", "Block$ebnf$1", "_", {"literal":")"}, "_", {"literal":"["}, "_", "Block$subexpression$1", "_", {"literal":"]"}], "postprocess": d => ({type: 'block', args: d[2], block: d[8]})},
-    {"name": "Assignment", "symbols": ["Chain", "_", {"literal":":"}, "_", "Chain"], "postprocess": d => ({ type: 'assignment', parent: d[0], child: d[4]})},
+    {"name": "Block", "symbols": [{"literal":"("}, "_", "Block$ebnf$1", "_", {"literal":")"}, "_", {"literal":"{"}, "_", "Block$subexpression$1", "_", {"literal":"}"}], "postprocess": d => ({type: 'block', args: d[2], block: d[8]})},
+    {"name": "Assignment$subexpression$1", "symbols": ["Chain"]},
+    {"name": "Assignment$subexpression$1", "symbols": ["Block"]},
+    {"name": "Assignment", "symbols": ["Chain", "_", {"literal":":"}, "_", "Assignment$subexpression$1"], "postprocess": d => ({ type: 'assignment', parent: d[0], child: d[4]})},
     {"name": "Chain", "symbols": ["Step"], "postprocess": d => d[0]},
     {"name": "Chain", "symbols": ["Step", "_", {"literal":"."}, "_", "Chain"], "postprocess": d => ({ type: 'chain', parent: d[0], child: d[4]})},
-    {"name": "Step$subexpression$1$ebnf$1", "symbols": ["Arg"]},
-    {"name": "Step$subexpression$1$ebnf$1", "symbols": ["Arg", "Step$subexpression$1$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
-    {"name": "Step$subexpression$1", "symbols": ["Step$subexpression$1$ebnf$1"]},
-    {"name": "Step$subexpression$1", "symbols": []},
-    {"name": "Step", "symbols": ["Property", "_", {"literal":"("}, "_", "Step$subexpression$1", "_", {"literal":")"}], "postprocess": d => ({ type: 'method', method: d[0], args: d[4] })},
-    {"name": "Step", "symbols": ["Atom"], "postprocess": d => d[0]},
+    {"name": "Step$ebnf$1", "symbols": []},
+    {"name": "Step$ebnf$1", "symbols": ["Arg", "Step$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
+    {"name": "Step", "symbols": ["Property", "_", {"literal":"("}, "_", "Step$ebnf$1", "_", {"literal":")"}], "postprocess": d => ({ type: 'method', method: d[0], args: d[4] })},
+    {"name": "Step", "symbols": ["Property"], "postprocess": d => d[0]},
     {"name": "Arg", "symbols": ["Atom", "_"], "postprocess": d => d[0]},
     {"name": "Atom", "symbols": ["Property"], "postprocess": d => ({ type: 'property',  value: d[0] })},
+    {"name": "Atom", "symbols": ["Chain"], "postprocess": d => d[0]},
     {"name": "Atom", "symbols": ["decimal"], "postprocess": d => ({ type: 'number', value: d[0] })},
     {"name": "Atom", "symbols": ["sqstring"], "postprocess": d => ({ type: 'string', value: d[0] })},
     {"name": "Atom", "symbols": ["dqstring"], "postprocess": d => ({ type: 'string', value: d[0] })},
-    {"name": "Property$ebnf$1", "symbols": []},
-    {"name": "Property$ebnf$1", "symbols": [/[0-9]/, "Property$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
-    {"name": "Property", "symbols": ["Label", "Property$ebnf$1"], "postprocess": d => d[0] + d[1].join().replace(/,/g, '')},
-    {"name": "Label$ebnf$1", "symbols": [/[a-zA-Z]/]},
-    {"name": "Label$ebnf$1", "symbols": [/[a-zA-Z]/, "Label$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
-    {"name": "Label", "symbols": ["Label$ebnf$1"], "postprocess": d => d[0].join().replace(/,/g, '')}
+    {"name": "Property$ebnf$1", "symbols": [/[a-zA-Z_]/]},
+    {"name": "Property$ebnf$1", "symbols": [/[a-zA-Z_]/, "Property$ebnf$1"], "postprocess": function arrconcat(d) {return [d[0]].concat(d[1]);}},
+    {"name": "Property", "symbols": ["Property$ebnf$1"], "postprocess": d => d[0].join().replace(/,/g, '')}
 ]
   , ParserStart: "Main"
 }

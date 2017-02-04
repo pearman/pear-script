@@ -50,7 +50,7 @@ Point: (x y) {
     }
 }
 ```
-Since all blocks are themselves tables, the code above can be simplified to this. Notice that bellow we are using the ``this`` key. ``this`` enables us to return a copy of the encapsulating block.
+Since all blocks are themselves tables, the code above can be simplified to this. If no ``return`` is specified the entire table will be returned.
 ```typescript
 Point: (x y) {
   dist: (p2) {
@@ -78,5 +78,24 @@ Since a number is an object, we can extend its functionality by adding additiona
 
 num.plus1().print() // Prints "4"
 num.div2().print()  // Prints "1.5"
+```
+
+### Metaprogramming
+
+Since everything is a table — we can generate executable code on the fly. For example, consider the following "array."
+
+```typescript
+() {1 2 3}
+```
+
+This would be equilvelant to ``{"1": 1, "2": 2, "3": 3}`` in JS. Since the table has no arguments when called it would return a literal of itself executing each entry in sequence. In this case each entry is a just a number object returning itself — but we can spice this up a bit.
+
+```typescript
+genCode: () {}
+genCode.1 = x: 1
+genCode.2 = y: 2
+genCode.3 = return x.+(y)
+
+genCode() // Returns 3
 ```
 
