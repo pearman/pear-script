@@ -1,22 +1,21 @@
 
 Prog "prog"
-  = Block _ Prog
-  / Block
+  = Block*
 
 Block "block"
   = parent:Statement "." child:Block { return {parent, child} }
   / Statement
 
 Statement "statement"
-  = Access
-  / Assign
-  / Object
+  = statement:Access _ { return statement }
+  / statement:Assign _ { return statement }
+  / statement:Object _ { return statement }
 
 Assign "assign"
-  = object: Object ":" property: Object { return {type: "assignment", object, property} }
+  = object: Object _ ":" _ property: Object { return {type: "assignment", object, property} }
 
 Access "access"
-  = object: Object "." property: Object { return {type: "access", object, property} }
+  = object: Object _ "." _ property: Object { return {type: "access", object, property} }
 
 Object "object"
   = Method
