@@ -5,12 +5,10 @@ import * as nearley from 'nearley';
 let grammar = require('./grammar/grammar.js');
 
 export function interpret(prog) {
-    let parser =  new nearley.Parser(grammar.ParserRules, grammar.ParserStart);
     let lastOutput = null;
     let parseTree = {};
     try {
-        parser.feed(prog);
-        parseTree = parser.results;
+        parseTree = grammar.parse(prog);
     } catch (err) {
         console.log(chalk.red('Parsing error!'));
         lastOutput = err;
