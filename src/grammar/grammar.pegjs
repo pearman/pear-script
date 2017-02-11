@@ -1,13 +1,13 @@
 
 Prog "prog"
-  = Block*
+  = Chain*
 
 Table "table"
   = "(" _ args:Object* _ ")" _ "{" _ block:Prog _ "}" { return {type: "table", args, block} }
 
-Block "block"
-  = parent:Statement _ "." _ child:Block { return {type: "chain", parent, child} }
-  / Statement
+Chain "chain"
+  = parent:Statement _ "." _ child:Chain { return [].concat(parent).concat(child) }
+  / statement:Statement
 
 Statement "statement"
   = statement:Object _ { return statement }
@@ -31,7 +31,7 @@ Atom "atom"
   / value:Property _  { return {type: "property", value } }
 
 Property "property"
-  = [a-zA-Z]+[0-9]*   { return text() }
+  = [a-zA-Z+-/%*]+[0-9]*   { return text() }
 
 Decimal "decimal"
   = Integer "." Integer

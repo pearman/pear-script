@@ -152,10 +152,10 @@ function peg$parse(input, options) {
       peg$c8 = "}",
       peg$c9 = peg$literalExpectation("}", false),
       peg$c10 = function(args, block) { return {type: "table", args, block} },
-      peg$c11 = peg$otherExpectation("block"),
+      peg$c11 = peg$otherExpectation("chain"),
       peg$c12 = ".",
       peg$c13 = peg$literalExpectation(".", false),
-      peg$c14 = function(parent, child) { return {type: "chain", parent, child} },
+      peg$c14 = function(parent, child) { return [].concat(parent).concat(child) },
       peg$c15 = peg$otherExpectation("statement"),
       peg$c16 = function(statement) { return statement },
       peg$c17 = peg$otherExpectation("propertyObject"),
@@ -166,8 +166,8 @@ function peg$parse(input, options) {
       peg$c22 = function(value) { return {type: "number", value } },
       peg$c23 = function(value) { return {type: "property", value } },
       peg$c24 = peg$otherExpectation("property"),
-      peg$c25 = /^[a-zA-Z]/,
-      peg$c26 = peg$classExpectation([["a", "z"], ["A", "Z"]], false, false),
+      peg$c25 = /^[a-zA-Z+-\/%*]/,
+      peg$c26 = peg$classExpectation([["a", "z"], ["A", "Z"], ["+", "/"], "%", "*"], false, false),
       peg$c27 = /^[0-9]/,
       peg$c28 = peg$classExpectation([["0", "9"]], false, false),
       peg$c29 = function() { return text() },
@@ -319,10 +319,10 @@ function peg$parse(input, options) {
 
     peg$silentFails++;
     s0 = [];
-    s1 = peg$parseBlock();
+    s1 = peg$parseChain();
     while (s1 !== peg$FAILED) {
       s0.push(s1);
-      s1 = peg$parseBlock();
+      s1 = peg$parseChain();
     }
     peg$silentFails--;
     if (s0 === peg$FAILED) {
@@ -445,7 +445,7 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseBlock() {
+  function peg$parseChain() {
     var s0, s1, s2, s3, s4, s5;
 
     peg$silentFails++;
@@ -464,7 +464,7 @@ function peg$parse(input, options) {
         if (s3 !== peg$FAILED) {
           s4 = peg$parse_();
           if (s4 !== peg$FAILED) {
-            s5 = peg$parseBlock();
+            s5 = peg$parseChain();
             if (s5 !== peg$FAILED) {
               peg$savedPos = s0;
               s1 = peg$c14(s1, s5);
