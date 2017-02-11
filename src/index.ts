@@ -13,7 +13,7 @@ function read() {
     rl.question(chalk.green('glang> '),  input => {
         if (input.trim() !== 'exit') {
             let output = interpret(input);
-            let value = _.get(output, ['value'])
+            let value = _.get(output, [0, 'value'])
             output = (_.isNil(value)) ? output : value;
             console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output)));
             read();

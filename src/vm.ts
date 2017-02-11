@@ -18,7 +18,7 @@ export class Vm {
                 if (parent) {
                     let methodName = _.get(parent, ['mappings', statement.method]) || statement.method;
                     let method = <(...any)=>any>_.get(parent, ['methods', methodName]);
-                    if (method) return method(...statement.args);
+                    if (method) return method(...this.execute(statement.args));
                     else {
                         console.log(chalk.red(`Cannot find method ${methodName}`));
                         console.log(chalk.yellow(JSON.stringify(parent, null, 2)));
@@ -37,12 +37,11 @@ export class Vm {
                 return this.executeStatement(statement, acc);
             }, null);
         }
-        return null;
+        return this.executeStatement(block);
     }
     
     execute(parseTree) {
-        let lastOutput = null;
-        _.forEach(parseTree, (table: any) => lastOutput = this.executeTable(table));
-        return lastOutput;
+        let outputVector = _.map(parseTree, (table: any) => this.executeTable(table));
+        return outputVector;
     }
 }

@@ -603,10 +603,10 @@ function peg$parse(input, options) {
         s3 = peg$parse_();
         if (s3 !== peg$FAILED) {
           s4 = [];
-          s5 = peg$parseObject();
+          s5 = peg$parseChain();
           while (s5 !== peg$FAILED) {
             s4.push(s5);
-            s5 = peg$parseObject();
+            s5 = peg$parseChain();
           }
           if (s4 !== peg$FAILED) {
             s5 = peg$parse_();

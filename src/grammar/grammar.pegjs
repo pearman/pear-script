@@ -23,7 +23,7 @@ Object "object"
   / Table
 
 Method "method"
-  = method:Property "(" _ args:Object*  _ ")" { return { type: "method", method, args } }
+  = method:Property "(" _ args:Chain*  _ ")" { return { type: "method", method, args } }
 
 Atom "atom"
   = value:Integer _   { return {type: "number", value } }
