@@ -31,7 +31,7 @@ Atom "atom"
   / value:Property _  { return {type: "property", value } }
 
 Property "property"
-  = [a-zA-Z+-/%*]+[0-9]*   { return text() }
+  = [a-zA-Z+\-/%*]+[0-9]*   { return text() }
 
 Decimal "decimal"
   = Integer "." Integer
