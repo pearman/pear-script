@@ -17,6 +17,6 @@ export function interpret(prog) {
         console.log(chalk.red(err));
         output = err;
     }
-    console.log(chalk.yellow(JSON.stringify(parseTree, null, 2)));
+    // console.log(chalk.yellow(JSON.stringify(parseTree, null, 2)));
     return output;
 }

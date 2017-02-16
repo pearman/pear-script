@@ -1,7 +1,17 @@
+import * as _ from 'lodash';
 
-export class Number {
+import { Type } from './baseTypeInterface';
+import { Table } from './table';
 
-    constructor(public value?: number) {}
+export class Number implements Type {
+
+    constructor(public value?: number) {
+        let tableDefaults = new Table();
+        this.mappings = _.merge({}, tableDefaults.mappings, this.mappings);
+        this.methods = _.merge({}, tableDefaults.methods, this.methods);
+    }
+
+    data = {};
 
     mappings = {
         '+' : 'plus',
