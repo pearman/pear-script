@@ -25,6 +25,10 @@ export class String implements Type {
 
         includes: (x: any): Boolean => {
             return new Boolean(_.includes(this.value, x.value));
+        },
+
+        is: (x: any): Boolean => {
+            return new Boolean(_.isEqual(this.value, x.value));
         }
     }
 }
