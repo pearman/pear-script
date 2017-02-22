@@ -20,7 +20,8 @@ export class Table implements Type {
     data = {};
 
     mappings = {
-        '#': 'getIndex'
+        '#': 'getIndex',
+        '=': 'set'
     };
 
     methods = {

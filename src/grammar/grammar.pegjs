@@ -37,7 +37,7 @@ Boolean "boolean"
   / "false"
 
 Property "property"
-  = [a-zA-Z+\-/%*?#]+[0-9]* { return text() }
+  = [a-zA-Z+\-/%*?#=]+[0-9]* { return text() }
 
 Decimal "decimal"
   = int1:Integer "." int2:Integer { return parseFloat(`${int1}.${int2}`) }

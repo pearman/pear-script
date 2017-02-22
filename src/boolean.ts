@@ -14,11 +14,11 @@ export class Boolean implements Type {
     data = {};
 
     mappings = {
-        '?' : 'ternary' 
+        '?' : 'then' 
     }
 
     methods = {
-        ternary: (x: any, y: any): any => {
+        then: (x: any, y: any): any => {
             return (this.value) ? x : y;
         },
 
@@ -29,13 +29,5 @@ export class Boolean implements Type {
         not: () => {
             return new Boolean(!this.value)
         },
-
-        then: (x: any): (Boolean | any) => {
-            return (this.value) ? x : new Boolean(false);
-        },
-
-        else: (x: any): (Boolean | any) => {
-            return (this.value) ? new Boolean(true) : x;
-        }
     }
 }
