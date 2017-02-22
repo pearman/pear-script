@@ -15,7 +15,7 @@ it('Should return 144' math 5 (result){ return(result.is(144)) })
 =('checkName' (name) {
     return(name.is('Gerb'))    
 })
-it('Should return true' checkName 'Gerba' (result){ return(result.is(true)) })
+it('Should return true' checkName 'Gerb' (result){ return(result.is(true)) })
 it('Should return false' checkName 'Rawren' (result){ return(result.is(false)) })
 
 =('hiddenArg' (){
