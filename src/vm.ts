@@ -59,14 +59,13 @@ export class Vm {
                     .value();
                 let output = _.get(this.execute(statements, localMethod), [0]);
                 return output;
-            }
+            } else console.log(chalk.red(`Not enough arguments for ${statement.method}`));;
         } else {
             let methodName = parent.mappings[statement.method] || statement.method;
             if (parent.methods[methodName])
                 return parent.methods[methodName](...this.execute(statement.args, parent));
+            else console.log(chalk.red(`Cannot find method ${statement.method}`));
         }
-
-        console.log(chalk.red(`Cannot find method ${statement.method}`));
         return null;
     }
 
@@ -74,9 +73,13 @@ export class Vm {
         let get: any = parent.methods.get;
         let value = get(statement);
         if (_.isNil(value)) {
-            get= this.rootTable.methods.get;
+            get = this.rootTable.methods.get;
             value = get(statement);
         }
-        return _.isNil(value) ? statement : value;
+        if (_.isNil(value)) {
+            console.log(chalk.red(`Unable to resolve ${statement.value}`));
+            return undefined;
+        }
+        return value;
     }
 }

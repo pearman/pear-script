@@ -1,25 +1,25 @@
 =('pass' '[ PASS ]')
 =('fail' '[ FAIL ]')
 
+=('it' (message fun input test) {
+    print(message)
+    =('result' test(fun(input)))
+    print(result.is(true).then(pass fail))
+})
+
 =('math' (x) {
     return(x.+(1).*(2).squared())
 })
+it('Should return 144' math 5 (result){ return(result.is(144)) })
 
-print('Following should be 144: ')
-print(math(5))
-print(math(5).is(144).then(pass fail))
-
-print('\n')
-
-set('checkName' (name) {
+=('checkName' (name) {
     return(name.is('Gerb'))    
 })
+it('Should return true' checkName 'Gerba' (result){ return(result.is(true)) })
+it('Should return false' checkName 'Rawren' (result){ return(result.is(false)) })
 
-print('Following should be true, followed by false:')
-=('out1' checkName('Gerb'))
-=('out2' checkName('Rawren'))
-print(out1)
-print(out2)
-print(out1.and(out2.not()).then(pass fail))
-
-print('\n')
+=('hiddenArg' (){
+    return(x)
+})
+hiddenArg.=('x' 'It worked!')
+it('Should return "It worked!"' hiddenArg '' (result){ return(result.is('It worked!'))})

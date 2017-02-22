@@ -27,7 +27,11 @@ export class Boolean implements Type {
         },
 
         not: () => {
-            return new Boolean(!this.value)
+            return new Boolean(!this.value);
         },
+
+        is: (x: Boolean) => {
+            return new Boolean(this.value === x.value);
+        } 
     }
 }
