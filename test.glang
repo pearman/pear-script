@@ -1,0 +1,25 @@
+set('pass' '[ PASS ]')
+set('fail' '[ FAIL ]')
+
+set('math' (x) {
+    return(x.+(1).*(2).squared())
+})
+
+print('Following should be 144: ')
+print(math(5))
+print(math(5).is(144).?(pass fail))
+
+print('\n')
+
+set('checkName' (name) {
+    return(name.is('Gerb'))    
+})
+
+print('Following should be true, followed by false:')
+set('out1' checkName('Gerb'))
+set('out2' checkName('Rawren'))
+print(out1)
+print(out2)
+print(out1.and(out2.not()).?(pass fail))
+
+print('\n')

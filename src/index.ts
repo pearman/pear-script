@@ -1,6 +1,7 @@
 import * as readline from 'readline';
 import * as chalk from 'chalk';
 import * as _ from 'lodash';
+import * as fs from 'fs';
 
 import { Interpreter } from './interpreter';
 
@@ -27,4 +28,12 @@ function read() {
     });
 }
 
-read();
+if (process.argv.length > 2) {
+    fs.readFile(process.argv[2], 'utf8', (err, file) => {
+        if (err) console.log(err);
+        else {
+            interpreter.interpret(file);
+        }
+        rl.close();
+    });
+} else read();

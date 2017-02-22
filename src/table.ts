@@ -1,9 +1,27 @@
+import * as _ from 'lodash';
+
 import { Type } from './baseTypeInterface';
+import { Boolean } from './boolean';
 
 export class Table implements Type {
+    constructor(value?: any) {
+        if (!_.isNil(value)) {
+            _.forEach(value.block, (statement, index) => {
+                this.data[`#${index}`] = statement;
+            });
+            this.args = value.args;
+        }
+    }
+
+    value = undefined;
+
+    args = [];
+
     data = {};
 
-    mappings = {};
+    mappings = {
+        '#': 'getIndex'
+    };
 
     methods = {
         set: (property: any, value: any) => {
@@ -13,6 +31,25 @@ export class Table implements Type {
 
         get: (property: any) => {
             return this.data[property.value];
+        },
+
+        getIndex: (property: any) => {
+            return this.data[`#${property.value}`];
+        },
+
+        has: (property: any) => {
+            return new Boolean(_.isUndefined(this.data[property.value]));
+        },
+
+        return: (value: any) => {
+            this.value = value;
+            return this.value;
+        },
+
+        print: (value: any) => {
+            let output = (_.isUndefined(value.value)) ? value : value.value;
+            console.log(output);
+            return output;
         }
     };
 }

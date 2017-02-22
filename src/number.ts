@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 
 import { Type } from './baseTypeInterface';
 import { Table } from './table';
+import { Boolean } from './boolean';
 
 export class Number implements Type {
 
@@ -47,6 +48,10 @@ export class Number implements Type {
 
         abs: (): Number => {
             return new Number(Math.abs(this.value));
+        },
+
+        is: (value: Number) => {
+            return new Boolean(this.value === value.value)
         }
     }
 }

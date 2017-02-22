@@ -22,6 +22,14 @@ export class Boolean implements Type {
             return (this.value) ? x : y;
         },
 
+        and: (x: Boolean): any => {
+            return new Boolean(this.value && x.value);
+        },
+
+        not: () => {
+            return new Boolean(!this.value)
+        },
+
         then: (x: any): (Boolean | any) => {
             return (this.value) ? x : new Boolean(false);
         },
