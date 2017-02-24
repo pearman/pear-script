@@ -23,8 +23,8 @@ Since all operators are methods, an editor would be able to **auto-complete all 
 Tables are like λ functions in other languages. In the example bellow we have assigned the block, ``λ(x) = ((x + 1) * 2) ^ 2`` , to the key `math`. 
 
 ```typescript
-=('math' (x) {
+math : (x){
     return(x.+(1).*(2).squared())
-})
+}
 ```
 Executing ` math(5)` returns `144`.
