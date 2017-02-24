@@ -1,9 +1,16 @@
 
 Prog "prog"
-  = Chain*
+  = Block*
+
+Block "block"
+  = Assignment
+  / Chain
 
 Table "table"
   = "(" _ args:Object* _ ")" _ "{" _ block:Prog _ "}" { return {type: "table", args, block} }
+
+Assignment "assignment"
+  = parent:Chain _ ":" _ child:Chain { return {type: "assignment", parent, child} }
 
 Chain "chain"
   = parent:Statement _ "." _ child:Chain { return [].concat(parent).concat(child) }

@@ -44,13 +44,17 @@ export class Table implements Type {
 
         return: (value: any) => {
             this.value = value;
-            return this.value;
+            return _.cloneDeep(this.value);
         },
 
         print: (value: any) => {
             let output = (_.isUndefined(value.value)) ? value : value.value;
             console.log(output);
             return output;
+        },
+
+        new: (value: any) => {
+            return _.cloneDeep(value);
         }
     };
 }

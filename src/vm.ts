@@ -25,6 +25,7 @@ export class Vm {
         switch (statement.type) {
             case 'method': return this.handleMethod(statement, parent);
             case 'property': return this.handleProperty(statement, parent);
+            case 'assignment' : return this.handleAssignment(statement, parent);
             default: return this.wrapType(statement);
         }
     }
@@ -41,6 +42,23 @@ export class Vm {
     execute(parseTree, parent = null) {
         let outputVector = _.map(parseTree, (table: any) => this.executeTable(table, parent));
         return outputVector;
+    }
+
+    handleAssignment(statement, parent) {
+        let ultimateParent = parent;
+        let ultimateProperty = statement.parent;
+        if (_.isArray(ultimateProperty)) {
+            ultimateProperty = ultimateProperty[ultimateProperty.length- 1];
+            ultimateParent = _.get(this.execute(statement.parent.slice(0, statement.parent.length - 1)), 0);
+        }
+        if (!_.isUndefined(ultimateParent)) {
+            let set: any = _.get(ultimateParent, ['methods', 'set']);
+            if (set) {
+                set(ultimateProperty, _.get(this.execute([statement.child], parent), 0));
+                return statement.child;
+            }
+        }
+        return null;
     }
 
     handleMethod(statement, parent) {
