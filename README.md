@@ -36,3 +36,12 @@ p2: Point(3, 2)
 p1.dist(p2).print()
 ```
 
+### Addressable Memory
+
+In the example bellow we use `\` to jump one level up in scope enabling us to access the globally defined `x`.
+
+```typescript
+x: 1
+example: (x) { x.+(\.x) }
+```
+
