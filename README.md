@@ -13,7 +13,7 @@ Tables are like λ functions in other languages. In the example bellow we have a
 ```ruby
 math: (x){ x.+(1).*(2).squared() }
 ```
-Executing ` math(5)` returns `144`.
+Executing `math(5)` returns `144`.
 
 ## Implementing a Class
 
