@@ -1,7 +1,3 @@
-# In Progress
-* Implment proper closures
-* Make value accessable via data
-
 # Overview
 
 ## Key Concepts
