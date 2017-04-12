@@ -20,7 +20,7 @@ Executing ` math(5)` returns `144`.
 ```ruby
 Point: (x, y) {
   dist: (p2) { x.-(p2.x).squared().+(y.-(p2.y).squared()).sqrt() }
-  this.new() // Return a copy of this object
+  this.new() # Return a copy of this object
 }
 p1: Point(1, 2)
 p2: Point(3, 2)
