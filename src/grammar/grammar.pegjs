@@ -1,6 +1,6 @@
 
 Prog "prog"
-  = Block*
+  = _ block:Block* { return block }
 
 Block "block"
   = Assignment
