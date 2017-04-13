@@ -6,7 +6,8 @@ export let Number: any = {
   '*' : (args) => _.reduce(args, (acc, value: any) => acc * value.value, 1),
   '/' : (args) => _.reduce(args, (acc, value: any) => acc / value.value, 1),
   'squared' : (args) => {
-    let a = <number>_.map(args, 'value')[0];
+    let a = args[0].value;
     return a * a;
-  }
+  },
+  'sqrt': (args) => Math.sqrt(args[0].value)
 }
