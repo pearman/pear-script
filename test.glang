@@ -6,3 +6,7 @@ plus3: (a) {
     a.+(3)
 }
 result: plus3(z).print()
+
+'hello world'.print()
+name: 'gabe'
+name.+(' pearhill').print()

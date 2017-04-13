@@ -3,6 +3,8 @@ import * as chalk from 'chalk';
 
 import { Table } from './types/table';
 import { Number } from './types/number';
+import { String } from './types/string';
+import { Boolean } from './types/boolean';
 
 export class Vm {
 
@@ -44,8 +46,8 @@ export class Vm {
 
     wrapPrimitive(statement) {
         if (_.isNumber(statement)) return _.merge({}, Table, Number, {value: statement, type: 'number'});
-        if (_.isBoolean(statement)) return _.merge({}, Table, {value: statement, type: 'boolean'});
-        if (_.isString(statement)) return _.merge({}, Table, {value: statement, type: 'string'});
+        if (_.isBoolean(statement)) return _.merge({}, Table, Boolean, {value: statement, type: 'boolean'});
+        if (_.isString(statement)) return _.merge({}, Table, String, {value: statement, type: 'string'});
         return statement;
     }
 }

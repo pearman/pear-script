@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 
 export let Table: any = {
-  'type': 'table',
   'print' : (args) => {
     if (args.length === 1) {
       console.log(args[0].value);
