@@ -33,11 +33,11 @@ Method "method"
   = method:Property "(" _ args:Chain*  _ ")" { return { type: "method", method, args } }
 
 Atom "atom"
-  = value:Decimal _   { return {type: "number", value } }
-  / value:Integer _   { return {type: "number", value } } 
-  / value:Boolean _ { return {type: "boolean", value: (value === 'true') ? true : false } }
+  = value:Decimal _   { return value }
+  / value:Integer _   { return value } 
+  / value:Boolean _ { return (value === 'true') ? true : false }
   / value:Property _  { return {type: "property", value } }
-  / value:String _ { return {type: "string", value } }
+  / value:String _ { return value }
 
 Boolean "boolean"
   = "true"

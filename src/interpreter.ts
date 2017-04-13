@@ -14,24 +14,12 @@ export class Interpreter {
         let output = null;
         try {
             parseTree = grammar.parse(prog);
+            //console.log(parseTree);
             output = this.vm.execute(parseTree);
+            //console.log(this.vm.memory);
         } catch (err) {
             console.log(chalk.red(err));
             output = err;
-        }
-        return output;
-    }
-
-    printTable(data) {
-        let output = '';
-        if (data) {
-            output += '{ ';
-            _.forEach(data, (value, key) => {
-                let subValue = _.get(value, ['value']);
-                if (_.isNil(subValue)) subValue = value;
-                output += `${key}:${JSON.stringify(subValue)} `;
-            });
-            output += '}';
         }
         return output;
     }

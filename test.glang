@@ -1,27 +1,8 @@
-pass : '[ PASS ]'
-fail : '[ FAIL ]'
+x: 1
+y: 3
+z: x.+(y).*(3).squared().print()
 
-it : (message fun input test) {
-    print(message)
-    result : test(fun(input))
-    print(result.is(true).then(pass fail))
+plus3: (a) {
+    a.+(3)
 }
-
-math : (x) {
-    return(x.+(1).*(2).squared())
-}
-it('Should return 144' math 5 (result){ return(result.is(144)) })
-
-Point : (x y) {
-    dist: (p) {
-        return(x.-(p.x).squared().+( y.-(p.y).squared()).sqrt())
-    }
-}
-
-Point(3 4)
-p1 : new(Point)
-
-Point(5 6)
-p2: new(Point)
-
-print(p1.dist(p2))
+result: plus3(z).print()

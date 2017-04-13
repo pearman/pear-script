@@ -16,11 +16,7 @@ function read() {
     rl.question(chalk.green('> '),  input => {
         if (input.trim() !== 'exit') {
             let output = interpreter.interpret(input);
-            let value = _.get(output, [0, 'value']);
-            let data = _.get(output, [0, 'data']);
-            if (!_.isNil(value)) output = JSON.stringify(value);
-            else if (!_.isNil(data)) output = interpreter.printTable(data);
-            console.log(chalk.cyan('[OUT] = ' + output));
+            console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output, null, 2)));
             read();
         } else {
             rl.close()
