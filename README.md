@@ -18,9 +18,9 @@ To test your installation try the following command!
 # Description
 ## All Primitives are Tables
 
-All primitives including numbers, strings, and booleans are tables. That means that in order to operate on them we need to call their encapsulated methods. Let's look at some examples. 
+All primitives (numbers, strings, and booleans) are tables. That means that in order to operate on them we need to call their encapsulated methods. Let's look at some examples. 
 
-Perhaps we want to verify that 1 + 2 is equal to to 3. This could be written:
+Perhaps we want to verify that 1 + 2 is equal to 3. This could be written:
 
 ```ruby
 1.+(2).is(3).print() # Prints 'true'
