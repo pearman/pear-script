@@ -1,8 +1,19 @@
 
-'hello world'.print()
+test: (output expected) {
+    output.is(expected).then('PASS' 'FAIL').print()
+}
 
-1.+(2).is(3).print()
-1.+(2).*(3).sqrt().print()
+'Testing Simple Tables, Methods, and Assignment'.print()
+chain1: (x) { x.+(2).is(3) }
+chain2: (x) { x.+(2).*(3).sqrt() }
+test(chain1(1) true)
+test(chain1(2) false)
+test(chain2(1) 3)
+''.print()
 
-math: (x){ x.+(1).*(2).squared() }
-math(5).print()
+'Testing Multi-Argument Table Execution and Table Variable Storage'.print()
+table: (x y){
+    z: x.+(y)
+    z.*(10)
+}
+test(table(5 5) 100)
