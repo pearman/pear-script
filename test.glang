@@ -9,11 +9,17 @@ chain2: (x) { x.+(2).*(3).sqrt() }
 test(chain1(1) true)
 test(chain1(2) false)
 test(chain2(1) 3)
-''.print()
 
-'Testing Multi-Argument Table Execution and Table Variable Storage'.print()
+'\nTesting Multi-Argument Table Execution and Table Variable Storage'.print()
 table: (x y){
     z: x.+(y)
     z.*(10)
 }
 test(table(5 5) 100)
+
+'\nTesting Class Functionality'.print()
+Point: (x y) {}
+dist: (p1 p2) { p2.x.-(p1.x).squared().+(p2.y.-(p1.y).squared()).sqrt() }
+
+p1: Point(3 4)
+dist(p1 Point(4 5)).print()

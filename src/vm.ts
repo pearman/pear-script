@@ -14,17 +14,19 @@ export class Vm {
         let output = null;
         while (parseTree.length > 0) {
             let statement = parseTree.shift();
-            //console.log(`${level} SHIFT`, statement);
+            //console.log(chalk.blue(`${level} SHIFT`), statement);
             output = this.reduce(statement, acc, this.memory, level);
         }
         return output;
     }
 
     reduce(statement, acc, rootScope, level) {
-        //console.log(`${level} REDUCE`, statement, acc);
+        //console.log(chalk.green(`${level} REDUCE`), statement);
         if (_.isArray(statement)) {
             return _.reduce(statement, (acc, value, i) => {
-                return this.reduce(value, acc, rootScope, ++level);
+                let result = this.reduce(value, acc, rootScope, ++level);
+                //console.log(chalk.red('TYPE'), result);
+                return result;
             }, acc);
         } else {
             statement = this.wrapPrimitive(statement);
