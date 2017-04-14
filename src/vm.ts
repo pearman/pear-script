@@ -11,12 +11,13 @@ export class Vm {
     memory = {};
 
     execute(parseTree, acc = this.memory, level = 0) {
+        let output = null;
         while (parseTree.length > 0) {
             let statement = parseTree.shift();
             //console.log(`${level} SHIFT`, statement);
-            this.reduce(statement, acc, this.memory, level);
+            output = this.reduce(statement, acc, this.memory, level);
         }
-        //return output;
+        return output;
     }
 
     reduce(statement, acc, rootScope, level) {
