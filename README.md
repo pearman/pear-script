@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/pearman/pear-script/blob/master/images/logo.png"/>
+  <img src="images/logo.png"/>
 </p>
 
 ## Running the Interpreter
