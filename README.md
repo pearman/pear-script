@@ -1,4 +1,6 @@
-![logo](https://github.com/pearman/g-lang/blob/master/images/logo.png)
+<p align="center">
+  <img src="https://github.com/pearman/g-lang/blob/master/images/logo.png"/>
+</p>
 
 ## Running the Interpreter
 
