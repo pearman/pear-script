@@ -32,7 +32,23 @@ To calculate the square root of (1 + 2) * 3 we would write:
 1.+(2).*(3).sqrt().print() # Prints '9'
  ```
 
-## Table Creation and Local Variable Assignment
+## Assignment
+
+Variable assignment is done with `:` in a similar fashion to JSON.
+
+```ruby
+x: 'a Variable'
+x.is('a Variable').print()
+```
+
+The variable will exist within the currently defined table. **All assignments return a copy of the table in which they were defined** (this will be explained more in the next section). Let's look at an example:
+
+```ruby
+table: () { x: 3 }
+table().x.print() # Prints 3
+```
+
+## Tables
 
 Tables are like λ functions in other languages. In the example bellow we have assigned the function, `λ(x) = ((x + 1) * 2) ^ 2` , to the key `math`.  Note that the last statement in the table is the returned value.
 
@@ -40,16 +56,38 @@ Tables are like λ functions in other languages. In the example bellow we have a
 math: (x){ x.+(1).*(2).squared() }
 math(5).print() # Prints '144'
 ```
-## Implementing a Class
+If we want to use our table as a simple map we can use the following pattern:
 
 ```ruby
-Point: (x, y) {
-  dist: (p2) { x.-(p2.x).squared().+(y.-(p2.y).squared()).sqrt() }
-  this.new()
-}
-
-p1: Point(1, 2)
-p2: Point(3, 2)
-
-p1.dist(p2).print()
+user: () { name: 'Gabe' age: 23 }
+user().name.print() # Prints 'Gabe'
 ```
+
+Since assignments return a copy of the table in which they were defined, the last statement `age: 23` will return a copied table when `user` is called. I hope that this will encourage immutability.
+
+## Implementing a Class
+
+Leveraging the features explored above we can now implement a simple class. Note that the arguments `x` and `y` are written as data to the table to which they are linked.
+
+```ruby
+Point: (x y) {
+    add: (p) { Point(x.+(p.x) y.+(p.y)) }
+    distanceTo: (p) { 
+        p.x.-(x).squared().+(p.y.-(y).squared()).sqrt() 
+    }
+}
+p1: Point(0 0)
+p2: p1.add(Point(1 1))
+p1.distanceTo(p2).is(2.sqrt()).print() # Prints 'true'
+```
+
+-----
+
+## Bugs
+
+```ruby
+x: 5
+y: () { x: 4 }
+y.x.print() # Prints 5, should throw an error!
+```
+
