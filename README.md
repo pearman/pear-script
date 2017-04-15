@@ -67,7 +67,7 @@ Since assignments return a copy of the table in which they were defined, the las
 
 ## Implementing a Class
 
-Leveraging the features explored above we can now implement a simple class. Note that the arguments `x` and `y` are written as data to the table to which they are linked.
+Leveraging the features explored above we can now implement a simple class. Note that the arguments `x` and `y` are written as data in the table to which they are linked.
 
 ```ruby
 Point: (x y) {
