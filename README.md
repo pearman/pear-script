@@ -1,4 +1,5 @@
-# Getting Started
+![logo](https://github.com/pearman/g-lang/images/logo.png)
+
 ## Running the Interpreter
 
 To play with the language yourself, get started with the commands bellow. Note that a Node.JS installation is required.
