@@ -50,15 +50,6 @@ table: () { x: 3 }
 table().x.print() # Prints '3'
 ```
 
-## Conditional Logic
-
-Every table has an `is` method for value comparision. In the example bellow `x.is(3)` returns `true`. The value `true` is a Boolean so we can call its `then` method which takes two arguments. The first will be returned if the boolean is `true` and the other if it is `false`.
-
-```ruby
-x: 3
-x.is(3).then('X is 3' 'X is not 3').print() # Prints 'X is 3'
-```
-
 ## Tables
 
 Tables are like λ functions in other languages. In the example bellow we have assigned the function, `λ(x) = ((x + 1) * 2) ^ 2` , to the key `math`.  Note that the last statement in the table is the returned value.
@@ -75,6 +66,16 @@ user().name.print() # Prints 'Gabe'
 ```
 
 Since assignments return a copy of the table in which they were defined, the last statement `age: 23` will return a copied table when `user` is called. I hope that this will encourage immutability.
+
+
+## Conditional Logic
+
+Every table has an `is` method for value comparision. In the example bellow `x.is(3)` returns `true`. The value `true` is a Boolean so we can call its `then` method which takes two arguments. The first will be returned if the boolean is `true` and the other if it is `false`.
+
+```ruby
+x: 3
+x.is(3).then('X is 3' 'X is not 3').print() # Prints 'X is 3'
+```
 
 ## Implementing a Class
 
