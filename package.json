@@ -4,10 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prestart": "npm run build",
     "start": "node ./dist/index.js",
+
+    "predev": "npm run grammar",
     "dev": "./node_modules/.bin/tsc -w",
+
+    "prebuild": "npm run grammar",
     "build": "./node_modules/.bin/tsc",
-    "grammar": "./node_modules/.bin/pegjs src/grammar/grammar.pegjs > src/grammar/grammar.js && cp src/grammar/grammar.js dist/grammar/grammar.js"
+    
+    "grammar": "./node_modules/.bin/pegjs src/grammar/grammar.pegjs > src/grammar/grammar.js",
+    "postgrammar": "cp src/grammar/grammar.js dist/grammar/grammar.js"
   },
   "author": "Gabe Pearhill",
   "license": "MIT",

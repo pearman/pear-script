@@ -7,10 +7,8 @@
 To play with the language yourself, get started with the commands bellow. Note that a Node.JS installation is required.
 
 ```sh
-git clone https://github.com/pearman/g-lang.git
-cd g-lang
-npm install
-npm run build
+git clone https://github.com/pearman/pear-script.git
+cd pear-script
 npm start
 ```
 ## Hello World
