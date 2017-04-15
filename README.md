@@ -9,6 +9,7 @@ To play with the language yourself, get started with the commands bellow. Note t
 ```sh
 git clone https://github.com/pearman/pear-script.git
 cd pear-script
+npm run build
 npm start
 ```
 ## Hello World

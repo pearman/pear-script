@@ -19,8 +19,15 @@ export class Interpreter {
             //console.log(this.vm.memory);
         } catch (err) {
             console.log(chalk.red(err));
-            output = err;
+            output = null;
         }
         return output;
+    }
+
+    print(output) {
+        if (_.has(output, 'value'))
+            console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output.value, null, 2)));
+        else
+          console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output, null, 2)));  
     }
 }

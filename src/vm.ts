@@ -39,7 +39,9 @@ export class Vm {
                         _.set(acc, address, this.reduce(statement.child, acc, scope, ++level))
                     );
                 case 'property':
-                    return _.get(_.merge({}, scope, acc), statement.value);
+                    let result = _.get(_.merge({}, scope, acc), statement.value);
+                    if (_.isNil(result)) throw `Error: Could not find key '${statement.value}'`;
+                    return result;
                 case 'method':
                     let method: any = _.get(acc, statement.method);
                     let args = _.map(statement.args, arg => this.reduce(arg, acc, scope, ++level));

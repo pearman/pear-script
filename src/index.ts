@@ -13,10 +13,9 @@ const rl = readline.createInterface({
 let interpreter = new Interpreter();
 
 function read() {
-    rl.question(chalk.green('> '),  input => {
+    rl.question(chalk.green('pear> '),  input => {
         if (input.trim() !== 'exit') {
-            let output = interpreter.interpret(input);
-            console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output, null, 2)));
+            interpreter.print(interpreter.interpret(input));
             read();
         } else {
             rl.close()
