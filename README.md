@@ -38,14 +38,14 @@ Variable assignment is done with `:` in a similar fashion to JSON.
 
 ```ruby
 x: 'a Variable'
-x.is('a Variable').print()
+x.is('a Variable').print() # Prints 'true'
 ```
 
 The variable will exist within the currently defined table. **All assignments return a copy of the table in which they were defined** (this will be explained more in the next section). Let's look at an example:
 
 ```ruby
 table: () { x: 3 }
-table().x.print() # Prints 3
+table().x.print() # Prints '3'
 ```
 
 ## Tables
@@ -88,6 +88,6 @@ p1.distanceTo(p2).is(2.sqrt()).print() # Prints 'true'
 ```ruby
 x: 5
 y: () { x: 4 }
-y.x.print() # Prints 5, should throw an error!
+y.x.print() # Prints '5', should throw an error!
 ```
 
