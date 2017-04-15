@@ -47,21 +47,33 @@ export class Vm {
                     let args = _.map(statement.args, arg => this.reduce(arg, acc, scope, ++level));
                     if (_.isFunction(method)) {
                         args.unshift(acc);
-                        return this.wrapPrimitive(method(args));
+                        return this.wrapPrimitive(method(args, acc, scope, level));
                     } else {
                         let mappedArgs = _.map(method.args, (arg: any, i) => ({[arg.value] : args[i]}))
                         let tableScope = _.assign({}, acc, ...mappedArgs);
                         return this.wrapPrimitive(this.reduce(method.block, tableScope, tableScope, ++level));
                     }
+                case 'comment' : break;
                 default: return statement;
             }
         }
     }
 
     wrapPrimitive(statement) {
-        if (_.isNumber(statement)) return _.merge({}, Table, Number, {value: statement, type: 'number'});
-        if (_.isBoolean(statement)) return _.merge({}, Table, Boolean, {value: statement, type: 'boolean'});
-        if (_.isString(statement)) return _.merge({}, Table, String, {value: statement, type: 'string'});
+        if (_.isNumber(statement)) 
+            return _.merge({}, Table(this), Number(this), {value: statement, type: 'number'});
+        if (_.isBoolean(statement)) 
+            return _.merge({}, Table(this), Boolean(this), {value: statement, type: 'boolean'});
+        if (_.isString(statement)) 
+            return _.merge({}, Table(this), String(this), {value: statement, type: 'string'});
         return statement;
+    }
+
+    runTable(table, acc, scope, level, args) {
+        let key = _.uniqueId('__methodCall');
+        acc[key] = table;
+        let result = this.reduce({type: 'method', method: key, args}, acc, scope, ++level);
+        _.unset(acc, key);
+        return result;
     }
 }

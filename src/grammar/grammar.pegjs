@@ -1,55 +1,59 @@
 
-Prog "prog"
+Prog
   = _ block:Block* { return block }
 
-Block "block"
+Block
   = Assignment
   / Chain
+  / Comment
 
-Table "table"
+Table
   = "(" _ args:Object* _ ")" _ "{" _ block:Prog _ "}" { return {type: "table", args, block} }
 
-Assignment "assignment"
+Assignment
   = parent:Chain _ ":" _ child:Chain { return {type: "assignment", parent, child} }
 
-Chain "chain"
+Chain
   = parent:Statement _ "." _ child:Chain { return [].concat(parent).concat(child) }
   / statement:Statement
+  
+Comment
+  = _ "#" comment:[^\n]* _ { return {type: "comment", value: comment.join('')} }
 
-Statement "statement"
+Statement
   = statement:Object _ { return statement }
   / statement:Table _  { return statement }
 
-PropertyObject "propertyObject"
+PropertyObject
   = Method
   / Property
 
-Object "object"
+Object
   = Method
   / Atom
   / Table
 
-Method "method"
+Method
   = method:Property "(" _ args:Chain*  _ ")" { return { type: "method", method, args } }
 
-Atom "atom"
+Atom
   = value:Decimal _   { return value }
   / value:Integer _   { return value } 
   / value:Boolean _ { return (value === 'true') ? true : false }
   / value:Property _  { return {type: "property", value } }
   / value:String _ { return value }
 
-Boolean "boolean"
+Boolean
   = "true"
   / "false"
 
-Property "property"
-  = [a-zA-Z+\-/%*?#=\^<>]+[0-9]* { return text() }
+Property
+  = [a-zA-Z+\-/%*?=\^<>]+[0-9]* { return text() }
 
-Decimal "decimal"
+Decimal
   = int1:Integer "." int2:Integer { return parseFloat(`${int1}.${int2}`) }
 
-Integer "integer"
+Integer
   = [0-9]+ { return parseInt(text(), 10); }
   
 String

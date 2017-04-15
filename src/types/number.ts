@@ -1,6 +1,13 @@
 import * as _ from 'lodash';
+import { Vm } from '../vm';
+import { Table } from './table';
 
-export let Number: any = {
+export let Number = (vm: Vm) => ({
+  'times': (args, acc, scope, level) => {
+    let list = _.times(args[0].value, i => vm.runTable(args[1], acc, scope, level, [i]));
+    let map = _.reduce(list, (acc, value, i) => _.assign(acc, {[i] : value}), {});
+    return _.merge({type: 'table', args: [], block: []}, Table(vm), map);
+  },
   '<' : (args) => args[0].value < args[1].value,
   '>' : (args) => args[0].value > args[1].value,
   '<=' : (args) => args[0].value <= args[1].value,
@@ -16,4 +23,4 @@ export let Number: any = {
   'log10': (args) => Math.log10(args[0].value),
   'log2': (args) => Math.log2(args[0].value),
   'exp': (args) => Math.exp(args[0].value)
-}
+});

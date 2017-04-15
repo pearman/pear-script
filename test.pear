@@ -30,11 +30,21 @@ test(p1.distanceTo(p2) 2.sqrt())
 
 ''.print()
 
+# Do comments work?
+# Neat they do!
+
 x: 'a Variable'
 x.is('a Variable').print()
 
 table: () { x: 3 }
 table().x.print()
 
+# More comments
+
 x: 3
 x.is(3).then('X is 3' 'X is not 3').print()
+''.print()
+
+'Testing Loop Functionality'.print()
+3.times((i){ 3.-(i).print() })
+'BOOM'.print()
