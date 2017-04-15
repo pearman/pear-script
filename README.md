@@ -50,6 +50,15 @@ table: () { x: 3 }
 table().x.print() # Prints '3'
 ```
 
+## Conditional Logic
+
+Every table has an `is` method for value comparision. In the example bellow `x.is(3)` returns `true`. The value `true` is a Boolean so we can call its `then` method which takes two arguments. The first will be returned if the boolean is `true` and the other if it is `false`.
+
+```ruby
+x: 3
+x.is(3).then('X is 3' 'X is not 3').print() # Prints 'X is 3'
+```
+
 ## Tables
 
 Tables are like λ functions in other languages. In the example bellow we have assigned the function, `λ(x) = ((x + 1) * 2) ^ 2` , to the key `math`.  Note that the last statement in the table is the returned value.
@@ -75,7 +84,7 @@ Leveraging the features explored above we can now implement a simple class. Note
 Point: (x y) {
     add: (p) { Point(x.+(p.x) y.+(p.y)) }
     distanceTo: (p) { 
-        p.x.-(x).squared().+(p.y.-(y).squared()).sqrt() 
+        p.x.-(x).^(2).+(p.y.-(y).^(2)).sqrt() 
     }
 }
 p1: Point(0 0)

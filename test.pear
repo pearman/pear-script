@@ -17,19 +17,24 @@ table: (x y){
 }
 test(table(5 5) 100)
 
+'\nTesting Class Functionality'.print()
+Point: (x y) {
+    add: (p) { Point(x.+(p.x) y.+(p.y)) }
+    distanceTo: (p) { 
+        p.x.-(x).^(2).+(p.y.-(y).^(2)).sqrt() 
+    }
+}
+p1: Point(0 0)
+p2: p1.add(Point(1 1))
+test(p1.distanceTo(p2) 2.sqrt())
+
+''.print()
+
 x: 'a Variable'
 x.is('a Variable').print()
 
 table: () { x: 3 }
 table().x.print()
 
-'\nTesting Class Functionality'.print()
-Point: (x y) {
-    add: (p) { Point(x.+(p.x) y.+(p.y)) }
-    distanceTo: (p) { 
-        p.x.-(x).squared().+(p.y.-(y).squared()).sqrt() 
-    }
-}
-p1: Point(0 0)
-p2: p1.add(Point(1 1))
-test(p1.distanceTo(p2) 2.sqrt())
+x: 3
+x.is(3).then('X is 3' 'X is not 3').print()
