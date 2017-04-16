@@ -106,6 +106,8 @@ p1.distanceTo(p2).is(2.sqrt()).print() # Prints 'true'
 
 ## Bugs
 
+Closures are a bit wonky, investigate more elegant solution.
+
 ```ruby
 x: 5
 y: () { x: 4 }
