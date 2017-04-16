@@ -77,6 +77,15 @@ x: 3
 x.is(3).then('X is 3' 'X is not 3').print() # Prints 'X is 3'
 ```
 
+## Loops
+
+The number object has a ruby-like looping method called `times`. It takes a table, with an optional iterator argument, as input.
+
+```ruby
+3.times((i){ 1.+(i).print() })
+'BOOM'.print() # Prints '1 2 3 BOOM'
+```
+
 ## Implementing a Class
 
 Leveraging the features explored above we can now implement a simple class. Note that the arguments `x` and `y` are written as data in the table to which they are linked.
