@@ -101,21 +101,3 @@ p1: Point(0 0)
 p2: p1.add(Point(1 1))
 p1.distanceTo(p2).is(2.sqrt()).print() # Prints 'true'
 ```
-
------
-
-## Bugs
-
-Closures are a bit wonky, investigate more elegant solution.
-
-```ruby
-# Invalid Access
-x: 5
-y: () { x: 4 }
-y.x.print() # Prints '5', should throw an error!
-
-# Valid access, that fails
-x: 5
-3.times((i){ x.+(i).print() }) # Can't find key 'x'
-```
-
