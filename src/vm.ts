@@ -20,11 +20,11 @@ export class Vm {
         return output;
     }
 
-    reduce(statement, acc, scope, level) {
+    reduce(statement, acc, closure, level) {
         //console.log(chalk.green(`${level} REDUCE`), statement);
         if (_.isArray(statement)) {
             return _.reduce(statement, (accChain, value, i) => {
-                let result = this.reduce(value, accChain, _.merge({}, scope, accChain), ++level);
+                let result = this.reduce(value, accChain, closure, ++level);
                 //console.log(chalk.red('TYPE'), result);
                 return result;
             }, acc);
@@ -36,21 +36,21 @@ export class Vm {
                         _.map(statement.parent, 'value'):
                         statement.parent.value;
                     return _.cloneDeep(
-                        _.set(acc, address, this.reduce(statement.child, acc, scope, ++level))
+                        _.set(acc, address, this.reduce(statement.child, acc, closure, ++level))
                     );
                 case 'property':
-                    let result = _.get(_.merge({}, scope, acc), statement.value);
+                    let result = _.get(_.merge({}, closure, acc), statement.value);
                     if (_.isNil(result)) throw `Error: Could not find key '${statement.value}'`;
                     return result;
                 case 'method':
                     let method: any = _.get(acc, statement.method);
-                    let args = _.map(statement.args, arg => this.reduce(arg, acc, scope, ++level));
+                    let args = _.map(statement.args, arg => this.reduce(arg, acc, closure, ++level));
                     if (_.isFunction(method)) {
                         args.unshift(acc);
-                        return this.wrapPrimitive(method(args, acc, scope, level));
+                        return this.wrapPrimitive(method(args, acc, closure, level));
                     } else {
                         let mappedArgs = _.map(method.args, (arg: any, i) => ({[arg.value] : args[i]}))
-                        let tableScope = _.assign({}, acc, ...mappedArgs);
+                        let tableScope = _.assign({}, closure, acc, ...mappedArgs);
                         return this.wrapPrimitive(this.reduce(method.block, tableScope, tableScope, ++level));
                     }
                 case 'comment' : break;

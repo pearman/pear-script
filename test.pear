@@ -31,3 +31,12 @@ test(p1.distanceTo(p2) 2.sqrt())
 '\nTesting Loop Functionality'.print()
 3.times((i){ 1.+(i).print() })
 'BOOM'.print()
+
+''.print()
+x: 5
+y: () { x: 4 }
+y.x.print() # Prints '5', should throw an error!
+
+# Valid access, that fails
+x: 5
+3.times((i){ x.+(i).print() }) # Can't find key 'x'

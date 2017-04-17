@@ -1,4 +1,5 @@
 dist
+src/grammar/grammar.js
 
 # Logs
 logs
