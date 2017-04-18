@@ -1,6 +1,4 @@
 import * as _ from 'lodash';
-import * as chalk from 'chalk';
-import * as nearley from 'nearley';
 
 import { Vm } from './vm';
 
@@ -18,16 +16,9 @@ export class Interpreter {
             output = this.vm.execute(parseTree);
             //console.log(this.vm.memory);
         } catch (err) {
-            console.log(chalk.red(err));
+            console.error(err);
             output = null;
         }
         return output;
-    }
-
-    print(output) {
-        if (_.has(output, 'value'))
-            console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output.value, null, 2)));
-        else
-          console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output, null, 2)));  
     }
 }

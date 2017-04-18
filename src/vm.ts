@@ -1,5 +1,4 @@
 import * as _ from 'lodash';
-import * as chalk from 'chalk';
 
 import { Table } from './types/table';
 import { Number } from './types/number';
@@ -14,18 +13,15 @@ export class Vm {
         let output = null;
         while (parseTree.length > 0) {
             let statement = parseTree.shift();
-            //console.log(chalk.blue(`${level} SHIFT`), statement);
             output = this.reduce(statement, acc, _.cloneDeep(this.memory), level);
         }
         return output;
     }
 
     reduce(statement, acc, closure, level) {
-        //console.log(chalk.green(`${level} REDUCE`), statement);
         if (_.isArray(statement)) {
             return _.reduce(statement, (accChain, value, i) => {
                 let result = this.reduce(value, accChain, closure, ++level);
-                //console.log(chalk.red('TYPE'), result);
                 return result;
             }, acc);
         } else {
