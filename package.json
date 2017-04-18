@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/main.d.ts",
   "bin": {
-    "pear-script": "./dist/repl.js"
+    "pear-script": "node ./dist/repl.js"
   },
   "repository": {
     "type": "git",

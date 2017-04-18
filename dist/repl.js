@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 "use strict";
 var readline = require("readline");
 var chalk = require("chalk");

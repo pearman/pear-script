@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import * as readline from 'readline';
 import * as chalk from 'chalk';
 import * as _ from 'lodash';
