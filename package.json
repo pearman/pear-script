@@ -1,6 +1,6 @@
 {
   "name": "pear-script",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "An experimental language inspired by Smalltalk, Lua, and JavaScript. ",
   "main": "dist/index.js",
   "types": "dist/main.d.ts",
