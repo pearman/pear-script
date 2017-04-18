@@ -18,8 +18,7 @@
     "prebuild": "npm run grammar",
     "build": "./node_modules/.bin/tsc -d",
     "grammar": "./node_modules/.bin/pegjs src/grammar/grammar.pegjs > src/grammar/grammar.js",
-    "postgrammar": "cp src/grammar/grammar.js dist/grammar/grammar.js",
-    "install": "npm run build"
+    "postgrammar": "cp src/grammar/grammar.js dist/grammar/grammar.js"
   },
   "author": "Gabe Pearhill",
   "license": "MIT",
