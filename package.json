@@ -1,25 +1,22 @@
 {
   "name": "pear-script",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "An experimental language inspired by Smalltalk, Lua, and JavaScript. ",
   "main": "./dist/index.js",
   "types": "./dist/main.d.ts",
   "bin": {
     "pear-script": "./dist/repl.js"
   },
-  "repository" :{ 
-    "type" : "git",
-    "url" : "https://github.com/pearman/pear-script.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pearman/pear-script.git"
   },
   "scripts": {
     "start": "node ./dist/repl.js",
-
     "predev": "npm run grammar",
     "dev": "./node_modules/.bin/tsc -w -d",
-
     "prebuild": "npm run grammar",
     "build": "./node_modules/.bin/tsc -d",
-    
     "grammar": "./node_modules/.bin/pegjs src/grammar/grammar.pegjs > src/grammar/grammar.js",
     "postgrammar": "cp src/grammar/grammar.js dist/grammar/grammar.js"
   },
