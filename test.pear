@@ -40,3 +40,6 @@ y.x.print() # Prints '5', should throw an error!
 # Valid access, that fails
 x: 5
 3.times((i){ x.+(i).print() }) # Can't find key 'x'
+
+j: (i) { i.*(2) }
+2.*(j(5)).print() # Can't find X
