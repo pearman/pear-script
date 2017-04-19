@@ -13,11 +13,9 @@ var interpreter = new interpreter_1.Interpreter();
 function print(output) {
     if (_.has(output, 'value'))
         console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output.value, null, 2)));
-    else
-        console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output, null, 2)));
 }
 function read() {
-    rl.question(chalk.green('pear> '), function (input) {
+    rl.question(chalk.green('pear-script> '), function (input) {
         if (input.trim() !== 'exit') {
             print(interpreter.interpret(input));
             read();
