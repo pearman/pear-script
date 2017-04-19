@@ -22,7 +22,11 @@ function print(output) {
 function read() {
     rl.question(chalk.green('pear-script> '),  input => {
         if (input.trim() !== 'exit') {
-            print(interpreter.interpret(input));
+            try {
+                print(interpreter.interpret(input));
+            } catch(err) {
+                console.error(chalk.red('Error: Syntax Error'));
+            }
             read();
         } else {
             rl.close()

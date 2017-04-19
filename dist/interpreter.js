@@ -14,8 +14,7 @@ var Interpreter = (function () {
             output = this.vm.execute(parseTree);
         }
         catch (err) {
-            console.error(err);
-            output = null;
+            throw err;
         }
         return output;
     };

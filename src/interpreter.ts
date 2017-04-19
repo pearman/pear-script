@@ -16,8 +16,7 @@ export class Interpreter {
             output = this.vm.execute(parseTree);
             //console.log(this.vm.memory);
         } catch (err) {
-            console.error(err);
-            output = null;
+            throw err;
         }
         return output;
     }
