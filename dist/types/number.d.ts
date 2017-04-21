@@ -1,9 +1,7 @@
 import { Vm } from '../vm';
 export declare let Number: (vm: Vm) => {
     'times': (args: any, parent: any) => {
-        type: string;
-        args: any[];
-        block: any[];
+        _args: any[];
     } & {
         'is': (args: any) => boolean;
         'isNot': (args: any) => boolean;

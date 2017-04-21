@@ -9,7 +9,7 @@ export class Vm {
 
     memory = {};
 
-    eval(parseTree, parent = null) {
+    eval(parseTree, parent = null, noTableExecution = false) {
         //console.log(parseTree, parent);
         // Handle Primitives
         if (!_.isObject(parseTree)) return this.wrapPrimitive(parseTree);
@@ -22,7 +22,7 @@ export class Vm {
         // Handle Methods
         if (_.has(parseTree, '_method') && _.has(parseTree, '_args')) {
             let table: any = _.get(parent, parseTree._method);
-            let args = _.map(parseTree._args, arg => this.eval(arg, parent));
+            let args = _.map(parseTree._args, arg => this.eval(arg, parent, true));
             // Is it a JS function
             if (parent && _.isFunction(table)) {
                 args.unshift(parent);
@@ -46,6 +46,8 @@ export class Vm {
         }
 
         // Execute Table
+        if (noTableExecution) return parseTree;
+        
         let result = parseTree;
         let maxKey = -1;
         while (_.has(parseTree, ++maxKey)) {

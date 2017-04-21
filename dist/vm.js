@@ -8,9 +8,10 @@ var Vm = (function () {
     function Vm() {
         this.memory = {};
     }
-    Vm.prototype.eval = function (parseTree, parent) {
+    Vm.prototype.eval = function (parseTree, parent, noTableExecution) {
         var _this = this;
         if (parent === void 0) { parent = null; }
+        if (noTableExecution === void 0) { noTableExecution = false; }
         //console.log(parseTree, parent);
         // Handle Primitives
         if (!_.isObject(parseTree))
@@ -22,7 +23,7 @@ var Vm = (function () {
         // Handle Methods
         if (_.has(parseTree, '_method') && _.has(parseTree, '_args')) {
             var table = _.get(parent, parseTree._method);
-            var args_1 = _.map(parseTree._args, function (arg) { return _this.eval(arg, parent); });
+            var args_1 = _.map(parseTree._args, function (arg) { return _this.eval(arg, parent, true); });
             // Is it a JS function
             if (parent && _.isFunction(table)) {
                 args_1.unshift(parent);
@@ -46,6 +47,8 @@ var Vm = (function () {
             }, parent);
         }
         // Execute Table
+        if (noTableExecution)
+            return parseTree;
         var result = parseTree;
         var maxKey = -1;
         while (_.has(parseTree, ++maxKey)) {
