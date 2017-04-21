@@ -11,17 +11,15 @@ export class Interpreter {
         let parseTree = {};
         let output = null;
         try {
-            parseTree = this.correctParseTree(grammar.parse(prog));
-            //console.log(parseTree);
+            parseTree = this.toTable(grammar.parse(prog));
             output = this.vm.eval(parseTree, parseTree);
-            //console.log(this.vm.memory);
         } catch (err) {
             throw err;
         }
         return output;
     }
 
-    correctParseTree(parseTree) {
+    toTable(parseTree) {
         let i = 0;
         return _.reduce(parseTree, (acc, value: any) => {
             // Is Primitive

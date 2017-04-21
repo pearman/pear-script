@@ -6,20 +6,17 @@ var string_1 = require("./types/string");
 var boolean_1 = require("./types/boolean");
 var Vm = (function () {
     function Vm() {
-        this.memory = {};
     }
     Vm.prototype.eval = function (parseTree, parent, noTableExecution) {
         var _this = this;
         if (parent === void 0) { parent = null; }
         if (noTableExecution === void 0) { noTableExecution = false; }
-        //console.log(parseTree, parent);
         // Handle Primitives
         if (!_.isObject(parseTree))
             return this.wrapPrimitive(parseTree);
         // Handle Properties
-        if (_.has(parseTree, '_property')) {
+        if (_.has(parseTree, '_property'))
             return this.eval(_.get(parent, parseTree._property), parent);
-        }
         // Handle Methods
         if (_.has(parseTree, '_method') && _.has(parseTree, '_args')) {
             var table = _.get(parent, parseTree._method);
@@ -29,14 +26,12 @@ var Vm = (function () {
                 args_1.unshift(parent);
                 return this.wrapPrimitive(table(args_1, parent));
             }
+            // Otherwise it's a pear-script table
             var resolvedArgs = _.reduce(table._args, function (acc, value, i) {
                 return _.merge(acc, (_a = {}, _a[value._property] = args_1[i], _a));
                 var _a;
             }, {});
-            _.merge(table, resolvedArgs);
-            //console.log(table);
-            // Otherwise it's a pear-script table
-            return this.eval(table, _.merge({}, parent, table));
+            return this.eval(_.merge(table, resolvedArgs), _.merge({}, parent, table));
         }
         // Handle Method Chains
         if (_.isArray(parseTree)) {
@@ -51,9 +46,8 @@ var Vm = (function () {
             return parseTree;
         var result = parseTree;
         var maxKey = -1;
-        while (_.has(parseTree, ++maxKey)) {
+        while (_.has(parseTree, ++maxKey))
             result = this.eval(parseTree[maxKey], parent);
-        }
         return result;
     };
     Vm.prototype.wrapPrimitive = function (statement) {
@@ -63,8 +57,6 @@ var Vm = (function () {
             return _.merge({}, table_1.Table(this), boolean_1.Boolean(this), { value: statement, type: 'boolean' });
         if (_.isString(statement))
             return _.merge({}, table_1.Table(this), string_1.String(this), { value: statement, type: 'string' });
-        if (_.isString(statement))
-            return;
         return statement;
     };
     return Vm;

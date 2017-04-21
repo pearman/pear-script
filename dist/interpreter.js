@@ -10,8 +10,7 @@ var Interpreter = (function () {
         var parseTree = {};
         var output = null;
         try {
-            parseTree = this.correctParseTree(grammar.parse(prog));
-            //console.log(parseTree);
+            parseTree = this.toTable(grammar.parse(prog));
             output = this.vm.eval(parseTree, parseTree);
         }
         catch (err) {
@@ -19,7 +18,7 @@ var Interpreter = (function () {
         }
         return output;
     };
-    Interpreter.prototype.correctParseTree = function (parseTree) {
+    Interpreter.prototype.toTable = function (parseTree) {
         var i = 0;
         return _.reduce(parseTree, function (acc, value) {
             // Is Primitive
