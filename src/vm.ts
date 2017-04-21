@@ -9,56 +9,49 @@ export class Vm {
 
     memory = {};
 
-    execute(parseTree, acc = this.memory, level = 0) {
-        let output = null;
-        while (parseTree.length > 0) {
-            let statement = parseTree.shift();
-            output = this.reduce(statement, acc, _.cloneDeep(this.memory), level);
-        }
-        return output;
-    }
+    eval(parseTree, parent = null) {
+        //console.log(parseTree, parent);
+        // Handle Primitives
+        if (!_.isObject(parseTree)) return this.wrapPrimitive(parseTree);
 
-    reduce(statement, acc, closure, level) {
-        if (_.isArray(statement)) {
-            return _.reduce(statement, (accChain, value, i) => {
-                let result = this.reduce(value, accChain, closure, ++level);
-                return result;
-            }, acc);
-        } else {
-            statement = this.wrapPrimitive(statement);
-            switch(statement.type) {
-                case 'assignment': return this.handleAssignment(statement, acc, closure, level);
-                case 'property':return this.handleProperty(statement, acc, closure);
-                case 'method': return this.handleMethod(statement, acc, closure, level);       
-                case 'comment' : break;
-                default: return statement;
+        // Handle Properties
+        if (_.has(parseTree, '_property')) {
+            return this.eval(_.get(parent, parseTree._property), parent);
+        }
+
+        // Handle Methods
+        if (_.has(parseTree, '_method') && _.has(parseTree, '_args')) {
+            let table: any = _.get(parent, parseTree._method);
+            let args = _.map(parseTree._args, arg => this.eval(arg, parent));
+            // Is it a JS function
+            if (parent && _.isFunction(table)) {
+                args.unshift(parent);
+                return this.wrapPrimitive(table(args, parent));
             }
+            let resolvedArgs = _.reduce(table._args, (acc, value:any, i) => {
+                return  _.merge(acc, {[value._property]: args[i]});
+            }, {});
+            _.merge(table, resolvedArgs);
+            //console.log(table);
+            // Otherwise it's a pear-script table
+            return this.eval(table, _.merge({}, parent, table));
         }
-    }
 
-    handleAssignment(statement, acc, closure, level) {
-        var address = _.isArray(statement.parent) ? _.map(statement.parent, 'value') : statement.parent.value;
-        return _.cloneDeep(_.set(acc, address, this.reduce(statement.child, acc, closure, ++level)));
-    }
+        // Handle Method Chains
+        if (_.isArray(parseTree)) {
+            return _.reduce(parseTree, (acc, element) => {
+                if (!_.isObject(acc)) acc = this.wrapPrimitive(acc);
+                return this.eval(element, _.merge({}, parent, acc));
+            }, parent);
+        }
 
-    handleProperty(statement, acc, closure) {
-        let result = _.get(_.merge({}, closure, acc), statement.value || statement);
-        if (_.isNil(result)) throw `Error: Could not find key '${statement.value}'`;
+        // Execute Table
+        let result = parseTree;
+        let maxKey = -1;
+        while (_.has(parseTree, ++maxKey)) {
+            result = this.eval(parseTree[maxKey], parent);
+        }
         return result;
-    }
-
-    handleMethod(statement, acc, closure, level) {
-        let method: any = this.handleProperty(statement.method, acc, closure);
-        let args = _.map(statement.args, arg => this.reduce(arg, acc, closure, ++level));
-        if (_.isFunction(method)) {
-            args.unshift(acc);
-            return this.wrapPrimitive(method(args, acc, closure, level));
-        } else {
-            if (_.isNil(method)) throw `Error: Could not find key '${statement.method}'`;
-            let mappedArgs = _.map(method.args, (arg: any, i) => ({[arg.value] : args[i]}))
-            let tableClosure = _.assign({}, closure, acc, ...mappedArgs);
-            return this.wrapPrimitive(this.reduce(method.block, tableClosure, tableClosure, ++level));
-        }
     }
 
     wrapPrimitive(statement) {
@@ -68,14 +61,8 @@ export class Vm {
             return _.merge({}, Table(this), Boolean(this), {value: statement, type: 'boolean'});
         if (_.isString(statement)) 
             return _.merge({}, Table(this), String(this), {value: statement, type: 'string'});
+        if (_.isString(statement))
+            return 
         return statement;
-    }
-
-    runTable(table, acc, scope, level, args) {
-        let key = _.uniqueId('__methodCall');
-        acc[key] = table;
-        let result = this.reduce({type: 'method', method: key, args}, acc, scope, ++level);
-        _.unset(acc, key);
-        return result;
     }
 }

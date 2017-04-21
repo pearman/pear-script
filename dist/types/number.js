@@ -2,8 +2,9 @@
 var _ = require("lodash");
 var table_1 = require("./table");
 exports.Number = function (vm) { return ({
-    'times': function (args, acc, closure, level) {
-        var list = _.times(args[0].value, function (i) { return vm.runTable(args[1], acc, closure, level, [i]); });
+    'times': function (args, parent) {
+        console.log(args);
+        var list = _.times(args[0].value, function (i) { return vm.eval(args[1], parent); });
         var map = _.reduce(list, function (acc, value, i) {
             return _.assign(acc, (_a = {}, _a[i] = value, _a));
             var _a;

@@ -150,10 +150,29 @@ function peg$parse(input, options) {
       peg$c6 = peg$literalExpectation("{", false),
       peg$c7 = "}",
       peg$c8 = peg$literalExpectation("}", false),
-      peg$c9 = function(args, block) { return {type: "table", args, block} },
+      peg$c9 = function(args, block) { 
+        	let result = {};
+          let i = 0;
+          block.forEach(statement => {
+          	let object = statement;
+            if (statement.length || statement._method || statement._comment || statement._property)
+              object = {[i++]: statement};
+          	return Object.assign(result, object);
+          })
+          Object.assign(result, {_args: args})
+          return result;
+        },
       peg$c10 = ":",
       peg$c11 = peg$literalExpectation(":", false),
-      peg$c12 = function(parent, child) { return {type: "assignment", parent, child} },
+      peg$c12 = function(parent, child) {
+          let result = parent;
+          if (parent.length) {
+            result = parent.map(value => value._property).join('.');
+          } else {
+            result = parent._property;
+          }
+          return {[result]: child} 
+        },
       peg$c13 = ".",
       peg$c14 = peg$literalExpectation(".", false),
       peg$c15 = function(parent, child) { return [].concat(parent).concat(child) },
@@ -161,12 +180,12 @@ function peg$parse(input, options) {
       peg$c17 = peg$literalExpectation("#", false),
       peg$c18 = /^[^\n]/,
       peg$c19 = peg$classExpectation(["\n"], true, false),
-      peg$c20 = function(comment) { return {type: "comment", value: comment.join('')} },
+      peg$c20 = function(comment) { return { _comment: comment.join('') } },
       peg$c21 = function(statement) { return statement },
-      peg$c22 = function(method, args) { return { type: "method", method, args } },
+      peg$c22 = function(method, args) { return { _method: method, _args: args } },
       peg$c23 = function(value) { return value },
       peg$c24 = function(value) { return (value === 'true') ? true : false },
-      peg$c25 = function(value) { return {type: "property", value } },
+      peg$c25 = function(value) { return { _property: value }},
       peg$c26 = "true",
       peg$c27 = peg$literalExpectation("true", false),
       peg$c28 = "false",

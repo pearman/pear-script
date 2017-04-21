@@ -21,7 +21,7 @@ function read() {
                 print(interpreter.interpret(input));
             }
             catch (err) {
-                console.error(chalk.red('Error: Syntax Error'));
+                console.error(err);
             }
             read();
         }

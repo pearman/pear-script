@@ -1,6 +1,6 @@
 import { Vm } from '../vm';
 export declare let Number: (vm: Vm) => {
-    'times': (args: any, acc: any, closure: any, level: any) => {
+    'times': (args: any, parent: any) => {
         type: string;
         args: any[];
         block: any[];

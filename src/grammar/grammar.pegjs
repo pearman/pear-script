@@ -8,17 +8,36 @@ Block
   / Comment
 
 Table
-  = "(" _ args:Object* _ ")" _ "{" _ block:Prog _ "}" { return {type: "table", args, block} }
+  = "(" _ args:Object* _ ")" _ "{" _ block:Prog _ "}" { 
+  	let result = {};
+    let i = 0;
+    block.forEach(statement => {
+    	let object = statement;
+      if (statement.length || statement._method || statement._comment || statement._property)
+        object = {[i++]: statement};
+    	return Object.assign(result, object);
+    })
+    Object.assign(result, {_args: args})
+    return result;
+  }
 
 Assignment
-  = parent:Chain _ ":" _ child:Chain { return {type: "assignment", parent, child} }
+  = parent:Chain _ ":" _ child:Chain {
+    let result = parent;
+    if (parent.length) {
+      result = parent.map(value => value._property).join('.');
+    } else {
+      result = parent._property;
+    }
+    return {[result]: child} 
+  }
 
 Chain
   = parent:Statement _ "." _ child:Chain { return [].concat(parent).concat(child) }
   / statement:Statement
   
 Comment
-  = _ "#" comment:[^\n]* _ { return {type: "comment", value: comment.join('')} }
+  = _ "#" comment:[^\n]* _ { return { _comment: comment.join('') } }
 
 Statement
   = statement:Object _ { return statement }
@@ -34,13 +53,13 @@ Object
   / Table
 
 Method
-  = method:Property "(" _ args:Chain*  _ ")" { return { type: "method", method, args } }
+  = method:Property "(" _ args:Chain*  _ ")" { return { _method: method, _args: args } }
 
 Atom
   = value:Decimal _   { return value }
   / value:Integer _   { return value } 
   / value:Boolean _ { return (value === 'true') ? true : false }
-  / value:Property _  { return {type: "property", value } }
+  / value:Property _  { return { _property: value }}
   / value:String _ { return value }
 
 Boolean

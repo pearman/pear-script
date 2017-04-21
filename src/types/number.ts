@@ -3,8 +3,9 @@ import { Vm } from '../vm';
 import { Table } from './table';
 
 export let Number = (vm: Vm) => ({
-  'times': (args, acc, closure, level) => {
-    let list = _.times(args[0].value, i => vm.runTable(args[1], acc, closure, level, [i]));
+  'times': (args, parent) => {
+    console.log(args);
+    let list = _.times(args[0].value, i => vm.eval(args[1], parent));
     let map = _.reduce(list, (acc, value, i) => _.assign(acc, {[i] : value}), {});
     return _.merge({type: 'table', args: [], block: []}, Table(vm), map);
   },
