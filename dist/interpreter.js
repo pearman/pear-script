@@ -7,15 +7,18 @@ var boolean_1 = require("./types/boolean");
 var grammar = require('./grammar/grammar.js');
 var Interpreter = (function () {
     function Interpreter() {
+        this.parseTree = {};
+        this.lastExecutionTime = -1;
     }
-    Interpreter.prototype.interpret = function (prog) {
+    Interpreter.prototype.interpret = function (prog, persistentTree) {
+        if (persistentTree === void 0) { persistentTree = {}; }
         var parseTree = {};
         var output = null;
         var executionTime = null;
         try {
-            parseTree = this.toTable(grammar.parse(prog));
+            this.parseTree = this.toTable(grammar.parse(prog));
             var before = _.now();
-            output = this.eval(parseTree, parseTree);
+            output = this.eval(this.parseTree, _.merge({}, persistentTree, this.parseTree));
             this.lastExecutionTime = _.now() - before;
         }
         catch (err) {

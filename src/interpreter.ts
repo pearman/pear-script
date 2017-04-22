@@ -7,16 +7,17 @@ import { Boolean } from './types/boolean';
 let grammar = require('./grammar/grammar.js');
 
 export class Interpreter {
-    lastExecutionTime;
+    parseTree = {};
+    lastExecutionTime = -1;
 
-    interpret(prog) {
+    interpret(prog, persistentTree = {}) {
         let parseTree = {};
         let output = null;
         let executionTime = null;
         try {
-            parseTree = this.toTable(grammar.parse(prog));
+            this.parseTree = this.toTable(grammar.parse(prog));
             let before = _.now();
-            output = this.eval(parseTree, parseTree);
+            output = this.eval(this.parseTree, _.merge({}, persistentTree, this.parseTree));
             this.lastExecutionTime = _.now() - before;
         } catch (err) {
             throw err;
@@ -59,12 +60,10 @@ export class Interpreter {
 
         // Execute Table
         if (noTableExecution) return parseTree;
-
         let result = parseTree;
         let maxKey = -1;
         while (_.has(parseTree, ++maxKey))
             result = this.eval(parseTree[maxKey], parent);
-
         return result;
     }
 

@@ -10,18 +10,29 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 var interpreter = new interpreter_1.Interpreter();
-function print(output) {
-    if (_.has(output, 'value'))
-        console.log(chalk.cyan('[OUT] = ' + JSON.stringify(output.value, null, 2)));
+var persistentTree = {};
+function print(output, time, printValue) {
+    if (printValue === void 0) { printValue = true; }
+    if (_.has(output, 'value') && printValue) {
+        console.log(chalk.cyan("[OUT] = " + JSON.stringify(output.value, null, 2)));
+    }
+    console.log(chalk.grey("Executed in " + time + "ms"));
 }
 function read() {
     rl.question(chalk.green('pear-script> '), function (input) {
         if (input.trim() !== 'exit') {
             try {
-                print(interpreter.interpret(input));
+                var output = interpreter.interpret(input, persistentTree);
+                persistentTree = _.merge(persistentTree, _.omitBy(interpreter.parseTree, function (value, key) { return _.isInteger(_.parseInt(key)) || _.startsWith('_'); }));
+                print(output, interpreter.lastExecutionTime);
             }
             catch (err) {
-                console.error(err);
+                if (_.has(err, 'message') && _.has(err, 'location')) {
+                    console.log(chalk.red(err.message));
+                    console.log(chalk.yellow("line " + err.location.start.line + ", character " + err.location.start.column));
+                }
+                else
+                    console.error(err);
             }
             read();
         }
@@ -35,7 +46,7 @@ if (process.argv.length > 2) {
         if (err)
             console.log(err);
         else
-            interpreter.interpret(file);
+            print(interpreter.interpret(file), interpreter.lastExecutionTime, false);
         rl.close();
     });
 }
