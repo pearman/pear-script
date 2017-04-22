@@ -1,4 +1,4 @@
-import { Vm } from '../vm';
-export declare let String: (vm: Vm) => {
+import { Interpreter } from '../interpreter';
+export declare let String: (interpreter: Interpreter) => {
     '+': (args: any) => string;
 };

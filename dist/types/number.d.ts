@@ -1,5 +1,5 @@
-import { Vm } from '../vm';
-export declare let Number: (vm: Vm) => {
+import { Interpreter } from '../interpreter';
+export declare let Number: (interpreter: Interpreter) => {
     'times': (args: any, parent: any) => {
         _args: any[];
     } & {

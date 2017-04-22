@@ -1,6 +1,6 @@
 "use strict";
 var _ = require("lodash");
-exports.Table = function (vm) { return ({
+exports.Table = function (interpreter) { return ({
     'is': function (args) { return args[0].value === args[1].value; },
     'isNot': function (args) { return args[0].value !== args[1].value; },
     'print': function (args) {

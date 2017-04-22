@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
-import { Vm } from '../vm';
+import { Interpreter } from '../interpreter';
 
-export let Table = (vm: Vm) => ({
+export let Table = (interpreter: Interpreter) => ({
   'is': (args) => args[0].value === args[1].value,
   'isNot': (args) => args[0].value !== args[1].value,
   'print' : (args) => {

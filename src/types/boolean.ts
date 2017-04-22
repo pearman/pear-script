@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
-import { Vm } from '../vm';
+import { Interpreter } from '../interpreter';
 
-export let Boolean: any = (vm: Vm) => ({
-  'then': (args) => args[0].value ? args[1] : args[2]
+export let Boolean: any = (interpreter: Interpreter) => ({
+  'then': (args, parent) => {
+    return args[0].value ? interpreter.eval(args[1], parent) : interpreter.eval(args[2], parent)
+  }
 })

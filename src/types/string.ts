@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
-import { Vm } from '../vm';
+import { Interpreter } from '../interpreter';
 
-export let String = (vm: Vm) => ({
+export let String = (interpreter: Interpreter) => ({
   '+' : (args) => _.reduce(_.map(args, 'value'), (acc, value) => acc + value, ''),
 })
