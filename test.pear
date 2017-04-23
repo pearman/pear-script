@@ -29,25 +29,17 @@ p2: p1.add(Point(1 1))
 p1.distanceTo(p2)
 test(p1.distanceTo(p2) 2.sqrt())
 
-'\nRecursive Fibonacci Test'
-fib: (n) {
-    n.<=(2).then(1 (){ fib(n.-(1)).+(fib(n.-(2))) })
+'\nRecursive Fibonacci Test'.print()
+fib: (n a b) {
+    n.>(0).then( (){ fib(n.-(1) a.+(b) a)} a )
 }
-test(fib(10) 55)
-
-'\nTesting Loop Functionality'.print()
-3.times((i){ 1.+(i).print() })
-'BOOM'.print()
+test(fib( 10 1 0 ) 89)
 
 '\nTesting past closure bugs'.print()
 x: 5
 y: () { x: 4 }
 test(y.x 4)
 
-''.print()
-3.times((i){ x.+(i).print() })
-
-''.print()
 j: (i) { i.*(2) }
-2.*(j(5)).print()
+test(2.*(j(5)) 20)
 
