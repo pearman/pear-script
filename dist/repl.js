@@ -32,7 +32,7 @@ function read() {
                     console.log(chalk.yellow("line " + err.location.start.line + ", character " + err.location.start.column));
                 }
                 else
-                    console.error(err);
+                    console.error(chalk.red(err));
             }
             read();
         }

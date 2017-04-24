@@ -43,6 +43,7 @@ export class Interpreter {
                 args.unshift(parent);
                 return this.wrapPrimitive(table(args, parent));
             }
+            if (_.isNil(table)) throw `Method '${parseTree._method}' undefined.`;
             // Otherwise it's a pear-script table
             let resolvedArgs = _.reduce(table._args, (acc, value:any, i) => {
                 return _.merge(acc, {[value._property]: args[i]});
@@ -74,6 +75,8 @@ export class Interpreter {
             return _.merge({}, Table(this), Boolean(this), {value: statement, type: 'boolean'});
         if (_.isString(statement)) 
             return _.merge({}, Table(this), String(this), {value: statement, type: 'string'});
+        if (_.has(statement, '_args') && !_.has(statement, '_method')) // is Table
+            return _.merge({}, Table(this), statement);
         return statement;
     }
 

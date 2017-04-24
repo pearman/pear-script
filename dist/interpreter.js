@@ -45,6 +45,8 @@ var Interpreter = (function () {
                 args_1.unshift(parent);
                 return this.wrapPrimitive(table(args_1, parent));
             }
+            if (_.isNil(table))
+                throw "Method '" + parseTree._method + "' undefined.";
             // Otherwise it's a pear-script table
             var resolvedArgs = _.reduce(table._args, function (acc, value, i) {
                 return _.merge(acc, (_a = {}, _a[value._property] = args_1[i], _a));
@@ -76,6 +78,8 @@ var Interpreter = (function () {
             return _.merge({}, table_1.Table(this), boolean_1.Boolean(this), { value: statement, type: 'boolean' });
         if (_.isString(statement))
             return _.merge({}, table_1.Table(this), string_1.String(this), { value: statement, type: 'string' });
+        if (_.has(statement, '_args') && !_.has(statement, '_method'))
+            return _.merge({}, table_1.Table(this), statement);
         return statement;
     };
     Interpreter.prototype.toTable = function (parseTree) {

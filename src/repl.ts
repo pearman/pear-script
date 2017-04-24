@@ -36,7 +36,7 @@ function read() {
                 if (_.has(err, 'message') && _.has(err, 'location')) {
                     console.log(chalk.red(err.message));
                     console.log(chalk.yellow(`line ${err.location.start.line}, character ${err.location.start.column}`));
-                } else console.error(err);
+                } else console.error(chalk.red(err));
             }
             read();
         } else {
