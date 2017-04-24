@@ -1502,10 +1502,14 @@ function peg$parse(input, options) {
       	let result = {};
           let i = 0;
           block.forEach(statement => {
-          let object = statement;
-          if (statement.length || statement._method || statement._comment || statement._property)
-          object = {[i++]: statement};
-          return Object.assign(result, object);
+            let object = statement;
+            if (statement.length 
+                || statement._method 
+                || statement._comment 
+                || statement._property 
+                || typeof statement !== 'object')
+              object = {[i++]: statement};
+            return Object.assign(result, object);
           })
           Object.assign(result, {_args: args})
           return result;
