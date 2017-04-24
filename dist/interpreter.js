@@ -73,11 +73,11 @@ var Interpreter = (function () {
     };
     Interpreter.prototype.wrapPrimitive = function (statement) {
         if (_.isNumber(statement))
-            return _.merge({}, table_1.Table(this), number_1.Number(this), { value: statement, type: 'number' });
+            return _.merge({}, table_1.Table(this), number_1.Number(this), { value: statement });
         if (_.isBoolean(statement))
-            return _.merge({}, table_1.Table(this), boolean_1.Boolean(this), { value: statement, type: 'boolean' });
+            return _.merge({}, table_1.Table(this), boolean_1.Boolean(this), { value: statement });
         if (_.isString(statement))
-            return _.merge({}, table_1.Table(this), string_1.String(this), { value: statement, type: 'string' });
+            return _.merge({}, table_1.Table(this), string_1.String(this), { value: statement });
         if (_.has(statement, '_args') && !_.has(statement, '_method'))
             return _.merge({}, table_1.Table(this), statement);
         return statement;

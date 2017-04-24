@@ -70,11 +70,11 @@ export class Interpreter {
 
     wrapPrimitive(statement) {
         if (_.isNumber(statement)) 
-            return _.merge({}, Table(this), Number(this), {value: statement, type: 'number'});
+            return _.merge({}, Table(this), Number(this), {value: statement});
         if (_.isBoolean(statement)) 
-            return _.merge({}, Table(this), Boolean(this), {value: statement, type: 'boolean'});
+            return _.merge({}, Table(this), Boolean(this), {value: statement});
         if (_.isString(statement)) 
-            return _.merge({}, Table(this), String(this), {value: statement, type: 'string'});
+            return _.merge({}, Table(this), String(this), {value: statement});
         if (_.has(statement, '_args') && !_.has(statement, '_method')) // is Table
             return _.merge({}, Table(this), statement);
         return statement;
