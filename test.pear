@@ -31,13 +31,15 @@ test(p1.distanceTo(p2) 2.sqrt())
 
 '\nRecursive Fibonacci Test'.print()
 fib: (n a b) {
-    n.>(0).then( (){ fib(n.-(1) a.+(b) a)} a )
+    a: 1 
+    b: 0
+    n.>(0).then({ fib(n.-(1) a.+(b) a) } a )
 }
-test(fib( 10 1 0 ) 89)
+test(fib( 10 ) 89)
 
 '\nTesting past closure bugs'.print()
 x: 5
-y: () { x: 4 }
+y: { x: 4 }
 test(y.x 4)
 
 j: (i) { i.*(2) }

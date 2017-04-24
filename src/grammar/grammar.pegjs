@@ -1,4 +1,19 @@
 
+{
+	function parseBlock(args, block) {
+    	let result = {};
+        let i = 0;
+        block.forEach(statement => {
+        let object = statement;
+        if (statement.length || statement._method || statement._comment || statement._property)
+        object = {[i++]: statement};
+        return Object.assign(result, object);
+        })
+        Object.assign(result, {_args: args})
+        return result;
+    }
+}
+
 Prog
   = _ block:Block* { return block }
 
@@ -8,18 +23,11 @@ Block
   / Comment
 
 Table
-  = "(" _ args:Object* _ ")" _ "{" _ block:Prog _ "}" { 
-  	let result = {};
-    let i = 0;
-    block.forEach(statement => {
-    	let object = statement;
-      if (statement.length || statement._method || statement._comment || statement._property)
-        object = {[i++]: statement};
-    	return Object.assign(result, object);
-    })
-    Object.assign(result, {_args: args})
-    return result;
-  }
+  = args:ArgBlock _ "{" _ block:Prog _ "}" { return parseBlock(args, block)}
+  / "{" _ block:Prog _ "}" { return parseBlock([], block)}
+  
+ArgBlock
+	= "(" _ args:Object* _ ")" { return args }
 
 Assignment
   = parent:Chain _ ":" _ child:Chain {
