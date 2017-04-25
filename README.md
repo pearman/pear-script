@@ -2,15 +2,31 @@
   <img src="images/logo.png"/>
 </p>
 
-## Running the Interpreter
+# Getting Started
 
-To play with the language yourself, get started with the commands bellow. Note that a Node.JS installation is required.
+## Installation
+
+To get started simply install `pear-script` with `npm`. Note that a Node.JS installation is required.
+
+```sh
+npm install -g pear-script
+```
+
+`pear-script` can now be run from the command line.
+```sh
+pear-script # REPL
+pear-script file.pear # Run test.pear
+```
+
+## Developement
+
+To play with the language yourself, get started with the commands bellow. 
 
 ```sh
 git clone https://github.com/pearman/pear-script.git
 cd pear-script
-npm run build
-npm start
+npm install
+npm run dev
 ```
 ## Hello World
 To test your installation try the following command!
