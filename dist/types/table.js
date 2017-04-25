@@ -10,5 +10,6 @@ exports.Table = function (interpreter) { return ({
             console.log(JSON.stringify(args[0], null, 2));
         return args[0];
     },
+    'get': function (args) { return _.get(args[0], args[1].value); }
 }); };
 //# sourceMappingURL=/Users/gabepearhill/Documents/g-lang/types/table.js.map

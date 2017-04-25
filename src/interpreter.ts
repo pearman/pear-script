@@ -25,14 +25,15 @@ export class Interpreter {
         return output;
     }
 
-    eval(parseTree, parent = null, noTableExecution = false) {
+    eval(parseTreeIn, parent = null, noTableExecution = false) {
+        let parseTree = this.wrapPrimitive(parseTreeIn);
+        
         // Handle Primitives
-        if (!_.isObject(parseTree)) 
-            return this.wrapPrimitive(parseTree);
+        if (!_.isObject(parseTreeIn)) return parseTree;
 
         // Handle Properties
         if (_.has(parseTree, '_property'))
-            return this.eval(_.get(parent, parseTree._property), parent);
+            return this.eval(_.get(parent, parseTree._property), parent, true);
 
         // Handle Methods
         if (_.has(parseTree, '_method') && _.has(parseTree, '_args')) {

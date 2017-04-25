@@ -6,6 +6,7 @@ export declare let Number: (interpreter: Interpreter) => {
         'is': (args: any) => boolean;
         'isNot': (args: any) => boolean;
         'print': (args: any) => any;
+        'get': (args: any) => {};
     } & {};
     '<': (args: any) => boolean;
     '>': (args: any) => boolean;
