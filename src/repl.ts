@@ -26,7 +26,7 @@ function read() {
     rl.question(chalk.green('pear-script> '),  input => {
         if (input.trim() !== 'exit') {
             try {
-                let output = interpreter.interpret(input, persistentTree);
+                let output = interpreter.eval(input, persistentTree);
                 persistentTree = _.merge(
                     persistentTree, 
                     _.omitBy(interpreter.parseTree, (value, key) => _.isInteger(_.parseInt(key)) || _.startsWith('_'))
@@ -48,7 +48,7 @@ function read() {
 if (process.argv.length > 2) {
     fs.readFile(process.argv[2], 'utf8', (err, file) => {
         if (err) console.log(err);
-        else print(interpreter.interpret(file), interpreter.lastExecutionTime, false);
+        else print(interpreter.eval(file), interpreter.lastExecutionTime, false);
         rl.close();
     });
 } else read();

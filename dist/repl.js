@@ -22,7 +22,7 @@ function read() {
     rl.question(chalk.green('pear-script> '), function (input) {
         if (input.trim() !== 'exit') {
             try {
-                var output = interpreter.interpret(input, persistentTree);
+                var output = interpreter.eval(input, persistentTree);
                 persistentTree = _.merge(persistentTree, _.omitBy(interpreter.parseTree, function (value, key) { return _.isInteger(_.parseInt(key)) || _.startsWith('_'); }));
                 print(output, interpreter.lastExecutionTime);
             }
@@ -46,7 +46,7 @@ if (process.argv.length > 2) {
         if (err)
             console.log(err);
         else
-            print(interpreter.interpret(file), interpreter.lastExecutionTime, false);
+            print(interpreter.eval(file), interpreter.lastExecutionTime, false);
         rl.close();
     });
 }

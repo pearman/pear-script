@@ -10,7 +10,7 @@ var Interpreter = (function () {
         this.parseTree = {};
         this.lastExecutionTime = -1;
     }
-    Interpreter.prototype.interpret = function (prog, persistentTree) {
+    Interpreter.prototype.eval = function (prog, persistentTree) {
         if (persistentTree === void 0) { persistentTree = {}; }
         var parseTree = {};
         var output = null;
@@ -18,7 +18,7 @@ var Interpreter = (function () {
         try {
             this.parseTree = this.toTable(grammar.parse(prog));
             var before = _.now();
-            output = this.eval(this.parseTree, _.merge({}, persistentTree, this.parseTree));
+            output = this.evalParseTree(this.parseTree, _.merge({}, persistentTree, this.parseTree));
             this.lastExecutionTime = _.now() - before;
         }
         catch (err) {
@@ -26,7 +26,7 @@ var Interpreter = (function () {
         }
         return output;
     };
-    Interpreter.prototype.eval = function (parseTreeIn, parent, noTableExecution) {
+    Interpreter.prototype.evalParseTree = function (parseTreeIn, parent, noTableExecution) {
         var _this = this;
         if (parent === void 0) { parent = null; }
         if (noTableExecution === void 0) { noTableExecution = false; }
@@ -36,11 +36,11 @@ var Interpreter = (function () {
             return parseTree;
         // Handle Properties
         if (_.has(parseTree, '_property'))
-            return this.eval(_.get(parent, parseTree._property), parent, true);
+            return this.evalParseTree(_.get(parent, parseTree._property), parent, true);
         // Handle Methods
         if (_.has(parseTree, '_method') && _.has(parseTree, '_args')) {
             var table = _.get(parent, parseTree._method);
-            var args_1 = _.map(parseTree._args, function (arg) { return _this.eval(arg, parent, true); });
+            var args_1 = _.map(parseTree._args, function (arg) { return _this.evalParseTree(arg, parent, true); });
             // Is it a JS function
             if (parent && _.isFunction(table)) {
                 args_1.unshift(parent);
@@ -53,14 +53,14 @@ var Interpreter = (function () {
                 return _.merge(acc, (_a = {}, _a[value._property] = args_1[i], _a));
                 var _a;
             }, {});
-            return this.eval(_.merge(table, resolvedArgs), _.merge({}, parent, table));
+            return this.evalParseTree(_.merge(table, resolvedArgs), _.merge({}, parent, table));
         }
         // Handle Method Chains
         if (_.isArray(parseTree)) {
             return _.reduce(parseTree, function (acc, element) {
                 if (!_.isObject(acc))
                     acc = _this.wrapPrimitive(acc);
-                return _this.eval(element, _.merge({}, parent, acc));
+                return _this.evalParseTree(element, _.merge({}, parent, acc));
             }, parent);
         }
         // Execute Table
@@ -69,7 +69,7 @@ var Interpreter = (function () {
         var result = parseTree;
         var maxKey = -1;
         while (_.has(parseTree, ++maxKey))
-            result = this.eval(parseTree[maxKey], parent);
+            result = this.evalParseTree(parseTree[maxKey], parent);
         return result;
     };
     Interpreter.prototype.wrapPrimitive = function (statement) {

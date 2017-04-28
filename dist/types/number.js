@@ -4,7 +4,7 @@ var table_1 = require("./table");
 exports.Number = function (interpreter) { return ({
     'times': function (args, parent) {
         var list = _.times(args[0].value, function (i) {
-            return interpreter.eval(args[1], _.merge({}, parent, (_a = {}, _a[args[1]._args[0]._property] = i, _a)));
+            return interpreter.evalParseTree(args[1], _.merge({}, parent, (_a = {}, _a[args[1]._args[0]._property] = i, _a)));
             var _a;
         });
         var map = _.reduce(list, function (acc, value, i) {
