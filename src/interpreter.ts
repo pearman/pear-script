@@ -7,7 +7,6 @@ import { Boolean } from './types/boolean';
 let grammar = require('./grammar/grammar.js');
 
 export class Interpreter {
-    parseTree = {};
     lastExecutionTime = -1;
 
     eval(prog, persistentTree = {}) {
@@ -17,8 +16,20 @@ export class Interpreter {
         try {
             let before = _.now();
             let parseTree = this.toTable(grammar.parse(prog));
-            this.parseTree = this.attemptToResolveKeys(parseTree, parseTree);
-            output = this.evalParseTree(this.parseTree, _.merge({}, persistentTree, this.parseTree));
+            output = this.evalParseTree(parseTree, _.merge({}, persistentTree, parseTree));
+            this.lastExecutionTime = _.now() - before;
+        } catch (err) {
+            throw err;
+        }
+        return output;
+    }
+
+    precompute(prog, persistentTree = {}) {
+        let output = null;
+        try {
+            let before = _.now();
+            let parseTree = this.toTable(grammar.parse(prog));
+            output = this.attemptToResolveKeys(parseTree, parseTree);
             this.lastExecutionTime = _.now() - before;
         } catch (err) {
             throw err;

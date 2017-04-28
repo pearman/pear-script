@@ -7,7 +7,6 @@ var boolean_1 = require("./types/boolean");
 var grammar = require('./grammar/grammar.js');
 var Interpreter = (function () {
     function Interpreter() {
-        this.parseTree = {};
         this.lastExecutionTime = -1;
     }
     Interpreter.prototype.eval = function (prog, persistentTree) {
@@ -18,8 +17,21 @@ var Interpreter = (function () {
         try {
             var before = _.now();
             var parseTree_1 = this.toTable(grammar.parse(prog));
-            this.parseTree = this.attemptToResolveKeys(parseTree_1, parseTree_1);
-            output = this.evalParseTree(this.parseTree, _.merge({}, persistentTree, this.parseTree));
+            output = this.evalParseTree(parseTree_1, _.merge({}, persistentTree, parseTree_1));
+            this.lastExecutionTime = _.now() - before;
+        }
+        catch (err) {
+            throw err;
+        }
+        return output;
+    };
+    Interpreter.prototype.precompute = function (prog, persistentTree) {
+        if (persistentTree === void 0) { persistentTree = {}; }
+        var output = null;
+        try {
+            var before = _.now();
+            var parseTree = this.toTable(grammar.parse(prog));
+            output = this.attemptToResolveKeys(parseTree, parseTree);
             this.lastExecutionTime = _.now() - before;
         }
         catch (err) {
