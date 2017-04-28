@@ -7,6 +7,7 @@ export declare let Number: (interpreter: Interpreter) => {
         'isNot': (args: any) => boolean;
         'print': (args: any) => any;
         'get': (args: any) => {};
+        'map': (args: any, parent: any) => any;
     } & {};
     '<': (args: any) => boolean;
     '>': (args: any) => boolean;
