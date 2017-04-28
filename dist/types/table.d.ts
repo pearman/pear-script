@@ -4,5 +4,7 @@ export declare let Table: (interpreter: Interpreter) => {
     'isNot': (args: any) => boolean;
     'print': (args: any) => any;
     'get': (args: any) => {};
-    'map': (args: any, parent: any) => any;
+    'map': (args: any, parent: any) => {
+        _args: any[];
+    };
 };

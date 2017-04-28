@@ -16,8 +16,9 @@ var Interpreter = (function () {
         var output = null;
         var executionTime = null;
         try {
-            this.parseTree = this.toTable(grammar.parse(prog));
             var before = _.now();
+            var parseTree_1 = this.toTable(grammar.parse(prog));
+            this.parseTree = this.attemptToResolveKeys(parseTree_1, parseTree_1);
             output = this.evalParseTree(this.parseTree, _.merge({}, persistentTree, this.parseTree));
             this.lastExecutionTime = _.now() - before;
         }
@@ -102,6 +103,33 @@ var Interpreter = (function () {
             return acc;
             var _a, _b;
         }, {});
+    };
+    Interpreter.prototype.attemptToResolveKeys = function (parseTree, parent) {
+        var _this = this;
+        if (!_.isObject(parseTree))
+            return parseTree;
+        return _.mapValues(parseTree, function (value, key) {
+            if (_.isArray(value) || _.has(value, '_method') || _.has(value, '_property')) {
+                try {
+                    var result = _this.evalParseTree(value, parent);
+                    return result.value || result;
+                }
+                catch (err) {
+                    return value;
+                }
+            }
+            else {
+                if (_.has(value, '_args') && value['_args'].length === 0) {
+                    try {
+                        return _this.attemptToResolveKeys(value, _.merge({}, parent, parseTree));
+                    }
+                    catch (err) {
+                        return value;
+                    }
+                }
+            }
+            return value;
+        });
     };
     return Interpreter;
 }());

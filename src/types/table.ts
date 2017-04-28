@@ -12,9 +12,10 @@ export let Table = (interpreter: Interpreter) => ({
   'get': (args) => _.get(args[0], args[1].value),
   'map': (args, parent) => {
     let i = 0;
-    let result = _.cloneDeep(args[0]);
+    let result = {_args: []};
     while (_.has(args[0], i)) {
-      result[i] = interpreter.evalParseTree(args[1], _.merge({}, parent, {[args[1]._args[0]._property]: args[0][i]}));
+      let res = interpreter.evalParseTree(args[1], _.merge({}, parent, {[args[1]._args[0]._property]: args[0][i]}));
+      result[i] = _.has(res, 'value') ? res.value : res;
       i++;
     }
     return result;

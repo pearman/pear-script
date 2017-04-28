@@ -1,17 +1,15 @@
 "use strict";
 var _ = require("lodash");
-var table_1 = require("./table");
 exports.Number = function (interpreter) { return ({
     'times': function (args, parent) {
         var list = _.times(args[0].value, function (i) {
             return interpreter.evalParseTree(args[1], _.merge({}, parent, (_a = {}, _a[args[1]._args[0]._property] = i, _a)));
             var _a;
         });
-        var map = _.reduce(list, function (acc, value, i) {
-            return _.assign(acc, (_a = {}, _a[i] = value, _a));
+        return _.reduce(list, function (acc, value, i) {
+            return _.merge(acc, (_a = {}, _a[i] = _.has(value, 'value') ? value.value : value, _a));
             var _a;
-        }, {});
-        return _.merge({ _args: [] }, table_1.Table(interpreter), map);
+        }, { _args: [] });
     },
     '<': function (args) { return args[0].value < args[1].value; },
     '>': function (args) { return args[0].value > args[1].value; },

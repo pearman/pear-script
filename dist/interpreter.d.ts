@@ -5,4 +5,5 @@ export declare class Interpreter {
     evalParseTree(parseTreeIn: any, parent?: any, noTableExecution?: boolean): any;
     wrapPrimitive(statement: any): any;
     toTable(parseTree: any): {};
+    attemptToResolveKeys(parseTree: any, parent: any): any;
 }

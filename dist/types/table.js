@@ -13,9 +13,10 @@ exports.Table = function (interpreter) { return ({
     'get': function (args) { return _.get(args[0], args[1].value); },
     'map': function (args, parent) {
         var i = 0;
-        var result = _.cloneDeep(args[0]);
+        var result = { _args: [] };
         while (_.has(args[0], i)) {
-            result[i] = interpreter.evalParseTree(args[1], _.merge({}, parent, (_a = {}, _a[args[1]._args[0]._property] = args[0][i], _a)));
+            var res = interpreter.evalParseTree(args[1], _.merge({}, parent, (_a = {}, _a[args[1]._args[0]._property] = args[0][i], _a)));
+            result[i] = _.has(res, 'value') ? res.value : res;
             i++;
         }
         return result;

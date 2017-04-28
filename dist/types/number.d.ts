@@ -2,13 +2,7 @@ import { Interpreter } from '../interpreter';
 export declare let Number: (interpreter: Interpreter) => {
     'times': (args: any, parent: any) => {
         _args: any[];
-    } & {
-        'is': (args: any) => boolean;
-        'isNot': (args: any) => boolean;
-        'print': (args: any) => any;
-        'get': (args: any) => {};
-        'map': (args: any, parent: any) => any;
-    } & {};
+    };
     '<': (args: any) => boolean;
     '>': (args: any) => boolean;
     '<=': (args: any) => boolean;
