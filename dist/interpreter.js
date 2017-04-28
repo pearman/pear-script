@@ -93,7 +93,7 @@ var Interpreter = (function () {
             if (_.has(value, '_comment'))
                 return acc;
             // Is Chain, Method, or Property
-            if (_.isArray(value) || _.has(value, '_method'))
+            if (_.isArray(value) || _.has(value, '_method') || _.has(value, '_property'))
                 return _.assign(acc, (_b = {}, _b[i++] = value, _b));
             // Is Assignment
             _.forEach(value, function (value, key) {
