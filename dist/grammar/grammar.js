@@ -156,13 +156,15 @@ function peg$parse(input, options) {
       peg$c12 = ":",
       peg$c13 = peg$literalExpectation(":", false),
       peg$c14 = function(parent, child) {
-          let result = parent;
+          var result = parent;
           if (parent.length) {
-            result = parent.map(value => value._property).join('.');
+            result = parent.map(function(value) { return value._property }).join('.');
           } else {
             result = parent._property;
           }
-          return {[result]: child} 
+          var output = {};
+          output[result] = child;
+          return output; 
         },
       peg$c15 = ".",
       peg$c16 = peg$literalExpectation(".", false),
@@ -186,7 +188,7 @@ function peg$parse(input, options) {
       peg$c34 = /^[0-9]/,
       peg$c35 = peg$classExpectation([["0", "9"]], false, false),
       peg$c36 = function() { return text() },
-      peg$c37 = function(int1, int2) { return parseFloat(`${int1}.${int2}`) },
+      peg$c37 = function(int1, int2) { return parseFloat('' + int1 + '.' + int2) },
       peg$c38 = function() { return parseInt(text(), 10); },
       peg$c39 = "\"",
       peg$c40 = peg$literalExpectation("\"", false),
@@ -1499,21 +1501,24 @@ function peg$parse(input, options) {
 
 
   	function parseBlock(args, block) {
-      	let result = {};
-          let i = 0;
-          block.forEach(statement => {
-            let object = statement;
-            if (statement.length 
-                || statement._method 
-                || statement._comment 
-                || statement._property 
-                || typeof statement !== 'object')
-              object = {[i++]: statement};
-            return Object.assign(result, object);
-          })
-          Object.assign(result, {_args: args})
-          return result;
-      }
+      	var result = {};
+        var i = 0;
+        block.forEach(function(statement) {
+          var object = statement;
+          if (statement.length 
+              || statement._method 
+              || statement._comment 
+              || statement._property 
+              || typeof statement !== 'object') {
+            var temp = {};
+            temp[i++] = statement;
+            object = temp;
+          }
+          return Object.assign(result, object);
+        })
+        Object.assign(result, {_args: args})
+        return result;
+    }
 
 
   peg$result = peg$startRuleFunction();

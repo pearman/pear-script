@@ -1,21 +1,24 @@
 
 {
 	function parseBlock(args, block) {
-    	let result = {};
-        let i = 0;
-        block.forEach(statement => {
-          let object = statement;
-          if (statement.length 
-              || statement._method 
-              || statement._comment 
-              || statement._property 
-              || typeof statement !== 'object')
-            object = {[i++]: statement};
-          return Object.assign(result, object);
-        })
-        Object.assign(result, {_args: args})
-        return result;
-    }
+    	var result = {};
+      var i = 0;
+      block.forEach(function(statement) {
+        var object = statement;
+        if (statement.length 
+            || statement._method 
+            || statement._comment 
+            || statement._property 
+            || typeof statement !== 'object') {
+          var temp = {};
+          temp[i++] = statement;
+          object = temp;
+        }
+        return Object.assign(result, object);
+      })
+      Object.assign(result, {_args: args})
+      return result;
+  }
 }
 
 Prog
@@ -35,13 +38,15 @@ ArgBlock
 
 Assignment
   = parent:Chain _ ":" _ child:Chain {
-    let result = parent;
+    var result = parent;
     if (parent.length) {
-      result = parent.map(value => value._property).join('.');
+      result = parent.map(function(value) { return value._property }).join('.');
     } else {
       result = parent._property;
     }
-    return {[result]: child} 
+    var output = {};
+    output[result] = child;
+    return output; 
   }
 
 Chain
@@ -82,7 +87,7 @@ Property
   = [a-zA-Z+\-/%*?=\^<>]+[0-9]* { return text() }
 
 Decimal
-  = int1:Integer "." int2:Integer { return parseFloat(`${int1}.${int2}`) }
+  = int1:Integer "." int2:Integer { return parseFloat('' + int1 + '.' + int2) }
 
 Integer
   = [0-9]+ { return parseInt(text(), 10); }

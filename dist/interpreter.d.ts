@@ -1,5 +1,6 @@
 export declare class Interpreter {
     lastExecutionTime: number;
+    parseTree: {};
     eval(prog: any, persistentTree?: {}): any;
     precompute(prog: any, persistentTree?: {}): any;
     evalParseTree(parseTreeIn: any, parent?: any, noTableExecution?: boolean): any;

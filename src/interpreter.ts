@@ -8,6 +8,7 @@ let grammar = require('./grammar/grammar.js');
 
 export class Interpreter {
     lastExecutionTime = -1;
+    parseTree = {}
 
     eval(prog, persistentTree = {}) {
         let parseTree = {};
@@ -16,6 +17,7 @@ export class Interpreter {
         try {
             let before = _.now();
             let parseTree = this.toTable(grammar.parse(prog));
+            this.parseTree = parseTree;
             output = this.evalParseTree(parseTree, _.merge({}, persistentTree, parseTree));
             this.lastExecutionTime = _.now() - before;
         } catch (err) {

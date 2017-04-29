@@ -21,6 +21,22 @@ exports.Table = function (interpreter) { return ({
         }
         return result;
         var _a;
+    },
+    'sum': function (args, parent) {
+        var i = 0;
+        var result = 0;
+        while (_.has(args[0], i)) {
+            var res = interpreter.evalParseTree(args[0][i], _.merge({}, parent));
+            result += res.value;
+            i++;
+        }
+        return result;
+    },
+    'length': function (args, parent) {
+        var i = 0;
+        while (_.has(args[0], i))
+            i++;
+        return i;
     }
 }); };
 //# sourceMappingURL=/Users/gabepearhill/Documents/g-lang/types/table.js.map

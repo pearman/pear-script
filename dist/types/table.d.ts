@@ -7,4 +7,6 @@ export declare let Table: (interpreter: Interpreter) => {
     'map': (args: any, parent: any) => {
         _args: any[];
     };
+    'sum': (args: any, parent: any) => number;
+    'length': (args: any, parent: any) => number;
 };
