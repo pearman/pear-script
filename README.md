@@ -79,7 +79,7 @@ Tables are the fundemental data structure in pear-script. Everything is a table 
 
 If no keys are defined each entry in a table literal will automatically be assigned to a numeric key.
 
-```Ruby
+```ruby
 x: { 4 3 2 1 } # { 0:4 1:3 2:2 3:1 }
 xSquared: x.map( (i){ i.^(2) } ) # { 0:16 1:9 2:4 3:1 }
 xSub0: x.get(0) # 4
