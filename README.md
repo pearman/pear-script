@@ -4,6 +4,10 @@
 
 # Getting Started
 
+## Try It Now
+
+Head to [pear-script.io](http://pear-script.io) to try it now!
+
 ## Installation
 
 To get started simply install `pear-script` with `npm`. Note that a Node.JS installation is required.
@@ -28,12 +32,13 @@ cd pear-script
 npm install
 npm run dev
 ```
+# Description
 ## Hello World
 To test your installation try the following command!
 ```ruby
 'Hello World'.print()
 ```
-# Description
+
 ## All Primitives are Tables
 
 All primitives (numbers, strings, and booleans) are tables. That means that in order to operate on them we need to call their encapsulated methods. Let's look at some examples. 
@@ -62,11 +67,43 @@ x.is('a Variable').print() # Prints 'true'
 The variable will exist within the currently defined table. **All assignments return a copy of the table in which they were defined** (this will be explained more in the next section). Let's look at an example:
 
 ```ruby
-table: () { x: 3 }
-table().x.print() # Prints '3'
+table: { x: 3 }
+table.x.print() # Prints '3'
 ```
 
 ## Tables
+
+Tables are the fundemental data structure in pear-script. Everything is a table — meaning they have to be quite flexible. Play with all of these examples at [pear-script.io](http://pear-script.io) (click the ? in the title bar).
+
+### Table as an Array
+
+If no keys are defined each entry in a table literal will automatically be assigned to a numeric key.
+
+```Ruby
+x: { 4 3 2 1 } # { 0:4 1:3 2:2 3:1 }
+xSquared: x.map( (i){ i.^(2) } ) # { 0:16 1:9 2:4 3:1 }
+xSub0: x.get(0) # 4
+```
+
+### Table as a Map
+
+If a key is specified the value will be recored to the table as defined.
+
+```ruby
+y: { name: 'Bob' age: 19 } # { name:'Bob' age:19 }
+isOver18: y.age.>(18) # true
+```
+
+### Table as both an Array and Map
+
+Due the properties of a pear-script table, they can act simultaniously as arrays and maps. 
+
+```ruby
+z: { 98.2 85.2 90.2 75 gradesOf: 'Bob' } # { 0:98.2 1:85.2 ... gradesOf:'Bob'}
+finalAverage: z.sum()./( z.length() ) # 87.15
+```
+
+### Table as a Function
 
 Tables are like λ functions in other languages. In the example bellow we have assigned the function, `λ(x) = ((x + 1) * 2) ^ 2` , to the key `math`.  Note that the last statement in the table is the returned value.
 
@@ -74,15 +111,6 @@ Tables are like λ functions in other languages. In the example bellow we have a
 math: (x){ x.+(1).*(2).squared() }
 math(5).print() # Prints '144'
 ```
-If we want to use our table as a simple map we can use the following pattern:
-
-```ruby
-user: () { name: 'Gabe' age: 23 }
-user().name.print() # Prints 'Gabe'
-```
-
-Since assignments return a copy of the table in which they were defined, the last statement `age: 23` will return a copied table when `user` is called. I hope that this will encourage immutability.
-
 
 ## Conditional Logic
 
@@ -104,16 +132,26 @@ The number object has a ruby-like looping method called `times`. It takes a tabl
 
 ## Implementing a Class
 
-Leveraging the features explored above we can now implement a simple class. Note that the arguments `x` and `y` are written as data in the table to which they are linked.
+Leveraging the features explored above we can now implement a simple class. Note that the arguments `x` and `y` are written as data in the table to which they are linked. Play with this example at [pear-script.io](http://pear-script.io) (click the ? in the title bar).
 
 ```ruby
+# Note that 'x' and 'y' are added to the Table
+# during execution, so they do not need to be
+# defined within our 'Point' table.
 Point: (x y) {
-    add: (p) { Point(x.+(p.x) y.+(p.y)) }
-    distanceTo: (p) { 
-        p.x.-(x).^(2).+(p.y.-(y).^(2)).sqrt() 
-    }
+	add: (p) { Point(x.+(p.x) y.+(p.y)) }
+	distanceTo: (p) { 
+		p.x.-(x).^(2).+(p.y.-(y).^(2)).sqrt() 
+	}
 }
+
+# Initialize some Points
 p1: Point(0 0)
 p2: p1.add(Point(1 1))
-p1.distanceTo(p2).is(2.sqrt()).print() # Prints 'true'
+
+# Play with our Points
+result: p1.distanceTo(p2)
+
+result.print()
+result.is( 2.sqrt() ).print()
 ```
