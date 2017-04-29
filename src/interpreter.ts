@@ -25,16 +25,16 @@ export class Interpreter {
     }
 
     precompute(prog, persistentTree = {}) {
-        let output = null;
+        let parseTree = null;
         try {
             let before = _.now();
-            let parseTree = this.toTable(grammar.parse(prog));
-            output = this.attemptToResolveKeys(parseTree, parseTree);
+            let parsedCode = this.toTable(grammar.parse(prog));
+            parseTree = this.attemptToResolveKeys(parsedCode, parsedCode);
             this.lastExecutionTime = _.now() - before;
         } catch (err) {
             throw err;
         }
-        return output;
+        return parseTree;
     }
 
     evalParseTree(parseTreeIn, parent = null, noTableExecution = false) {

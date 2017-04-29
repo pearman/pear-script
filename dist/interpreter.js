@@ -27,17 +27,17 @@ var Interpreter = (function () {
     };
     Interpreter.prototype.precompute = function (prog, persistentTree) {
         if (persistentTree === void 0) { persistentTree = {}; }
-        var output = null;
+        var parseTree = null;
         try {
             var before = _.now();
-            var parseTree = this.toTable(grammar.parse(prog));
-            output = this.attemptToResolveKeys(parseTree, parseTree);
+            var parsedCode = this.toTable(grammar.parse(prog));
+            parseTree = this.attemptToResolveKeys(parsedCode, parsedCode);
             this.lastExecutionTime = _.now() - before;
         }
         catch (err) {
             throw err;
         }
-        return output;
+        return parseTree;
     };
     Interpreter.prototype.evalParseTree = function (parseTreeIn, parent, noTableExecution) {
         var _this = this;
