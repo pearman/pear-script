@@ -13,7 +13,7 @@ const rl = readline.createInterface({
 });
 
 let interpreter = new Interpreter();
-let persistentTree = {};
+let persistentTree = [{}];
 
 function print(output, time, printValue = true) {
     if (_.has(output, 'value') && printValue) {

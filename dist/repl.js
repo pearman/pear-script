@@ -10,7 +10,7 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 var interpreter = new interpreter_1.Interpreter();
-var persistentTree = {};
+var persistentTree = [{}];
 function print(output, time, printValue) {
     if (printValue === void 0) { printValue = true; }
     if (_.has(output, 'value') && printValue) {

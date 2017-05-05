@@ -9,17 +9,27 @@ let grammar = require('./grammar/grammar.js');
 export class Interpreter {
     lastExecutionTime = -1;
     parseTree = {}
+    types = {
+        Number,
+        String,
+        Boolean,
+        Table
+    }
 
-    eval(prog, persistentTree = {}) {
+    eval(prog, persistentTree = [{}]) {
         let parseTree = {};
         let output = null;
         let executionTime = null;
         try {
             let before = _.now();
-            let parseTree = this.toTable(grammar.parse(prog));
-            this.parseTree = parseTree;
-            output = this.evalParseTree(parseTree, _.merge({}, persistentTree, parseTree));
-            this.lastExecutionTime = _.now() - before;
+            let parseTree = grammar.parse(prog);
+            console.log('' + parseTree);
+            output = _.map(parseTree, (value: any) => value(persistentTree, this.types));
+            if (_.isFunction(_.last(output))) console.log('Output', (<any>_.last(output))(persistentTree, this.types));
+            console.log(persistentTree);
+            // this.parseTree = parseTree;
+            // output = this.evalParseTree(parseTree, _.merge({}, persistentTree, parseTree));
+            // this.lastExecutionTime = _.now() - before;
         } catch (err) {
             throw err;
         }

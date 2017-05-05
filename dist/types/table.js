@@ -1,6 +1,6 @@
 "use strict";
 var _ = require("lodash");
-exports.Table = function (interpreter) { return ({
+exports.Table = function (value) { return ({
     'is': function (args) { return args[0].value === args[1].value; },
     'isNot': function (args) { return args[0].value !== args[1].value; },
     'print': function (args) {
@@ -11,32 +11,31 @@ exports.Table = function (interpreter) { return ({
         return args[0];
     },
     'get': function (args) { return _.get(args[0], args[1].value); },
-    'map': function (args, parent) {
-        var i = 0;
-        var result = { _args: [] };
-        while (_.has(args[0], i)) {
-            var res = interpreter.evalParseTree(args[1], _.merge({}, parent, (_a = {}, _a[args[1]._args[0]._property] = args[0][i], _a)));
-            result[i] = _.has(res, 'value') ? res.value : res;
-            i++;
-        }
-        return result;
-        var _a;
-    },
-    'sum': function (args, parent) {
-        var i = 0;
-        var result = 0;
-        while (_.has(args[0], i)) {
-            var res = interpreter.evalParseTree(args[0][i], _.merge({}, parent));
-            result += res.value;
-            i++;
-        }
-        return result;
-    },
+    // 'map': (args, parent) => {
+    //   let i = 0;
+    //   let result = {_args: []};
+    //   while (_.has(args[0], i)) {
+    //     let res = interpreter.evalParseTree(args[1], _.merge({}, parent, {[args[1]._args[0]._property]: args[0][i]}));
+    //     result[i] = _.has(res, 'value') ? res.value : res;
+    //     i++;
+    //   }
+    //   return result;
+    // },
+    // 'sum': (args, parent) => {
+    //   let i = 0;
+    //   let result = 0;
+    //   while (_.has(args[0], i)) {
+    //     let res = interpreter.evalParseTree(args[0][i], _.merge({}, parent));
+    //     result += res.value;
+    //     i++;
+    //   }
+    //   return result;
+    // },
     'length': function (args, parent) {
         var i = 0;
         while (_.has(args[0], i))
             i++;
         return i;
-    }
+    },
 }); };
 //# sourceMappingURL=/Users/gabepearhill/Documents/g-lang/types/table.js.map

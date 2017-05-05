@@ -9,18 +9,27 @@ var Interpreter = (function () {
     function Interpreter() {
         this.lastExecutionTime = -1;
         this.parseTree = {};
+        this.types = {
+            Number: number_1.Number,
+            String: string_1.String,
+            Boolean: boolean_1.Boolean,
+            Table: table_1.Table
+        };
     }
     Interpreter.prototype.eval = function (prog, persistentTree) {
-        if (persistentTree === void 0) { persistentTree = {}; }
+        var _this = this;
+        if (persistentTree === void 0) { persistentTree = [{}]; }
         var parseTree = {};
         var output = null;
         var executionTime = null;
         try {
             var before = _.now();
-            var parseTree_1 = this.toTable(grammar.parse(prog));
-            this.parseTree = parseTree_1;
-            output = this.evalParseTree(parseTree_1, _.merge({}, persistentTree, parseTree_1));
-            this.lastExecutionTime = _.now() - before;
+            var parseTree_1 = grammar.parse(prog);
+            console.log('' + parseTree_1);
+            output = _.map(parseTree_1, function (value) { return value(persistentTree, _this.types); });
+            if (_.isFunction(_.last(output)))
+                console.log('Output', _.last(output)(persistentTree, this.types));
+            console.log(persistentTree);
         }
         catch (err) {
             throw err;
