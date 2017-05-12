@@ -25,11 +25,14 @@ var Interpreter = (function () {
         try {
             var before = _.now();
             var parseTree_1 = grammar.parse(prog);
-            console.log('' + parseTree_1);
+            //console.log('' + parseTree);
             output = _.map(parseTree_1, function (value) { return value(persistentTree, _this.types); });
             if (_.isFunction(_.last(output)))
-                console.log('Output', _.last(output)(persistentTree, this.types));
+                _.last(output)(persistentTree, this.types);
             console.log(persistentTree);
+            // this.parseTree = parseTree;
+            // output = this.evalParseTree(parseTree, _.merge({}, persistentTree, parseTree));
+            this.lastExecutionTime = _.now() - before;
         }
         catch (err) {
             throw err;

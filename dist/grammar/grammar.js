@@ -146,22 +146,26 @@ function peg$parse(input, options) {
       peg$c2 = peg$literalExpectation("{", false),
       peg$c3 = "}",
       peg$c4 = peg$literalExpectation("}", false),
-      peg$c5 = function(args, block) { return (p, t) =>  buildTable(p, t, args, block) },
-      peg$c6 = function(block) { return (p, t) => buildTable(p, t, [], block) },
+      peg$c5 = function(args, block) { 
+          return (p, t) => buildTable(p, t, args, block) 
+        },
+      peg$c6 = function(block) { 
+          return (p, t) => buildTable(p, t, [], block)(p, t)
+        },
       peg$c7 = "(",
       peg$c8 = peg$literalExpectation("(", false),
       peg$c9 = ")",
       peg$c10 = peg$literalExpectation(")", false),
-      peg$c11 = function(args) { return (p, t) => args },
+      peg$c11 = function(args) { return args },
       peg$c12 = ":",
       peg$c13 = peg$literalExpectation(":", false),
-      peg$c14 = function(parent, child) { return (p, t) => p[p.length - 1][parent(p, t)] = child(p, t) },
+      peg$c14 = function(parent, child) { return (p, t) => p[p.length - 1][parent] = child(p, t) },
       peg$c15 = ".",
       peg$c16 = peg$literalExpectation(".", false),
       peg$c17 = function(parent, child) {
           return (p, t) => {
             const newParent = p.concat(parent(p, t));
-            console.log('New Parent', newParent);
+            //console.log('New Parent', newParent);
             return child(newParent, t);
           }
         },
@@ -172,9 +176,11 @@ function peg$parse(input, options) {
       peg$c22 = peg$classExpectation(["\n"], true, false),
       peg$c23 = function(comment) { return (p, t) => {} },
       peg$c24 = function(method, args) { return (p, t) => {
-          args.unshift((_, t) => p[p.length - 1]);
-          let result =  method(p, t)(args.map(arg => arg(p, t)));
-          console.log('Result', result);
+          let argsWithContext = [(p2, t) => _.last(p)].concat(args);
+          let fun = method(p, t);
+          if (!_.isFunction(fun)) throw `'${fun}' is not a method`;
+          let result =  fun(argsWithContext.map(arg => arg(p, t)), p, t);
+          //console.log('Result', result);
           return result;
          } 
         },
@@ -190,13 +196,13 @@ function peg$parse(input, options) {
       peg$c34 = peg$classExpectation([["a", "z"], ["A", "Z"], "+", "-", "/", "%", "*", "?", "=", "^", "<", ">"], false, false),
       peg$c35 = /^[0-9]/,
       peg$c36 = peg$classExpectation([["0", "9"]], false, false),
-      peg$c37 = function() { return text() },
+      peg$c37 = function() { return text().trim() },
       peg$c38 = function() {
           const value = text();
           return (p, t) => {
             for (var i = p.length - 1; i >= 0; i--)
               if (p[i][value]) return p[i][value];
-            return value;
+            throw `Could not find key '${value}'`;
           }
         },
       peg$c39 = function(int1, int2) { return parseFloat('' + int1 + '.' + int2) },
@@ -601,7 +607,7 @@ function peg$parse(input, options) {
     var s0, s1, s2, s3, s4, s5;
 
     s0 = peg$currPos;
-    s1 = peg$parseProperty();
+    s1 = peg$parseRawProperty();
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       if (s2 !== peg$FAILED) {
@@ -1560,22 +1566,26 @@ function peg$parse(input, options) {
 
     function buildTable(p, t, args, block) {
       return (argsIn) => {
-        let sequence = [];
+        if (argsIn.length - 1 < args.length) 
+          throw `Not enough arguments for table execution`;
         // Load arguments
-        let argMap = {};
-        let argKeys = args(p, t);
-        for (i = 1; i < argsIn.length; i++)
-          argMap[argKeys[i - 1]] = argsIn[i];
+        let argMap = args.reduce((acc, value, i) => {
+          acc[value] = argsIn[i+1];
+          return acc;
+        }, {});
+        let parentIndex = p.length;
         let newParent = p.concat(argMap);
         // Execute table
-        for (var i = 0; i < block.length; i++)
-          sequence.push(block[i](newParent, t));
-        let result = newParent[newParent.length - 1];
+        let outputByIndex = block.map(statement => statement(newParent, t));
+        let outputTable = outputByIndex.reduce((acc, value, i) => {
+            acc[i] = value;
+            return acc;
+          }, {});
+        // console.log(JSON.stringify(_.last(newParent), null, 2));
         // Set table value
-        result.value = sequence[sequence.length - 1];
-        // Assign numeric values
-        sequence.forEach((value, i) => result[i] = value);
-        return Object.assign(t.Table(), result);
+        let result = _.merge(t.Table(), newParent[parentIndex], outputTable, { value: _.last(outputByIndex).value || _.last(outputByIndex) });
+        console.log(outputTable[0]);
+        return result;
       };
     }
 

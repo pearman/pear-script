@@ -6,11 +6,11 @@ export declare class Interpreter {
         String: (value: any) => {};
         Boolean: any;
         Table: (value?: any) => {
-            'is': (args: any) => boolean;
-            'isNot': (args: any) => boolean;
-            'print': (args: any) => any;
+            'is': (args: any) => any;
+            'isNot': (args: any) => any;
+            'print': (args: any) => {};
             'get': (args: any) => {};
-            'length': (args: any, parent: any) => number;
+            'length': (args: any, parent: any) => {};
         };
     };
     eval(prog: any, persistentTree?: {}[]): any;

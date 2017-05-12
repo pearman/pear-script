@@ -1,13 +1,16 @@
 import * as _ from 'lodash';
 import { Interpreter } from '../interpreter';
+import { Boolean } from './boolean';
+import { String } from './string';
+import { Number } from './number';
 
 export let Table = (value?) => ({
-  'is': (args) => args[0].value === args[1].value,
-  'isNot': (args) => args[0].value !== args[1].value,
+  'is': (args) => Boolean(args[0].value === args[1].value),
+  'isNot': (args) => Boolean(args[0].value !== args[1].value),
   'print': (args) => {
     if(_.has(args[0], 'value')) console.log(args[0].value)
     else console.log(JSON.stringify(args[0], null, 2));
-    return args[0];
+    return String(args[0]);
   },
   'get': (args) => _.get(args[0], args[1].value),
   // 'map': (args, parent) => {
@@ -33,6 +36,6 @@ export let Table = (value?) => ({
   'length': (args, parent) => {
     let i = 0;
     while (_.has(args[0], i)) i++;
-    return i;
+    return Number(i);
   },
 });

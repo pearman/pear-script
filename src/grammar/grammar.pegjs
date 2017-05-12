@@ -4,22 +4,26 @@
 
   function buildTable(p, t, args, block) {
     return (argsIn) => {
-      let sequence = [];
+      if (argsIn.length - 1 < args.length) 
+        throw `Not enough arguments for table execution`;
       // Load arguments
-      let argMap = {};
-      let argKeys = args(p, t);
-      for (i = 1; i < argsIn.length; i++)
-        argMap[argKeys[i - 1]] = argsIn[i];
+      let argMap = args.reduce((acc, value, i) => {
+        acc[value] = argsIn[i+1];
+        return acc;
+      }, {});
+      let parentIndex = p.length;
       let newParent = p.concat(argMap);
       // Execute table
-      for (var i = 0; i < block.length; i++)
-        sequence.push(block[i](newParent, t));
-      let result = newParent[newParent.length - 1];
+      let outputByIndex = block.map(statement => statement(newParent, t));
+      let outputTable = outputByIndex.reduce((acc, value, i) => {
+          acc[i] = value;
+          return acc;
+        }, {});
+      // console.log(JSON.stringify(_.last(newParent), null, 2));
       // Set table value
-      result.value = sequence[sequence.length - 1];
-      // Assign numeric values
-      sequence.forEach((value, i) => result[i] = value);
-      return Object.assign(t.Table(), result);
+      let result = _.merge(t.Table(), newParent[parentIndex], outputTable, { value: _.last(outputByIndex).value || _.last(outputByIndex) });
+      // console.log(result);
+      return result;
     };
   }
 }
@@ -34,20 +38,24 @@ Block
   / Comment
 
 Table
-  = args:ArgBlock _ "{" _ block:Prog _ "}" _ { return (p, t) =>  buildTable(p, t, args, block) } 
-  / "{" _ block:Prog _ "}" _ { return (p, t) => buildTable(p, t, [], block) }
+  = args:ArgBlock _ "{" _ block:Prog _ "}" _ { 
+    return (p, t) => buildTable(p, t, args, block) 
+  } 
+  / "{" _ block:Prog _ "}" _ { 
+    return (p, t) => buildTable(p, t, [], block)(p, t)
+  }
   
 ArgBlock
-	= "(" _ args:RawProperty* _ ")" { return (p, t) => args }
+	= "(" _ args:RawProperty* _ ")" { return args }
 
 Assignment
-  = parent:Property _ ":" _ child:Chain { return (p, t) => p[p.length - 1][parent(p, t)] = child(p, t) }
+  = parent:RawProperty _ ":" _ child:Chain { return (p, t) => p[p.length - 1][parent] = child(p, t) }
 
 Chain
   = parent:Object _ "." _ child:Chain {
     return (p, t) => {
       const newParent = p.concat(parent(p, t));
-      console.log('New Parent', newParent);
+      //console.log('New Parent', newParent);
       return child(newParent, t);
     }
   }
@@ -63,9 +71,11 @@ Object
 
 Method
   = method:Property "(" _ args:Chain*  _ ")" { return (p, t) => {
-    args.unshift((_, t) => p[p.length - 1]);
-    let result =  method(p, t)(args.map(arg => arg(p, t)));
-    console.log('Result', result);
+    let argsWithContext = [(p2, t) => _.last(p)].concat(args);
+    let fun = method(p, t);
+    if (!_.isFunction(fun)) throw `'${fun}' is not a method`;
+    let result =  fun(argsWithContext.map(arg => arg(p, t)), p, t);
+    //console.log('Result', result);
     return result;
    } 
   }
@@ -82,7 +92,7 @@ Boolean
   / "false"
   
 RawProperty
-  = [a-zA-Z+\-/%*?=\^<>]+[0-9]* _ { return text() }
+  = [a-zA-Z+\-/%*?=\^<>]+[0-9]* _ { return text().trim() }
   
 Property
   = [a-zA-Z+\-/%*?=\^<>]+[0-9]* {
@@ -90,7 +100,7 @@ Property
     return (p, t) => {
       for (var i = p.length - 1; i >= 0; i--)
         if (p[i][value]) return p[i][value];
-      return value;
+      throw `Could not find key '${value}'`;
     }
   }
 

@@ -48,7 +48,13 @@ function read() {
 if (process.argv.length > 2) {
     fs.readFile(process.argv[2], 'utf8', (err, file) => {
         if (err) console.log(err);
-        else print(interpreter.eval(file), interpreter.lastExecutionTime, false);
+        else {
+            try{
+                print(interpreter.eval(file), interpreter.lastExecutionTime, false);
+            } catch(err) {
+                console.error(chalk.red(err));
+            }
+        }
         rl.close();
     });
 } else read();

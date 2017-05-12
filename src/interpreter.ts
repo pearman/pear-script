@@ -23,13 +23,13 @@ export class Interpreter {
         try {
             let before = _.now();
             let parseTree = grammar.parse(prog);
-            console.log('' + parseTree);
+            //console.log('' + parseTree);
             output = _.map(parseTree, (value: any) => value(persistentTree, this.types));
-            if (_.isFunction(_.last(output))) console.log('Output', (<any>_.last(output))(persistentTree, this.types));
+            if (_.isFunction(_.last(output))) (<any>_.last(output))(persistentTree, this.types);
             console.log(persistentTree);
             // this.parseTree = parseTree;
             // output = this.evalParseTree(parseTree, _.merge({}, persistentTree, parseTree));
-            // this.lastExecutionTime = _.now() - before;
+            this.lastExecutionTime = _.now() - before;
         } catch (err) {
             throw err;
         }
