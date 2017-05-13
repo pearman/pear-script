@@ -159,7 +159,11 @@ function peg$parse(input, options) {
       peg$c11 = function(args) { return args },
       peg$c12 = ":",
       peg$c13 = peg$literalExpectation(":", false),
-      peg$c14 = function(parent, child) { return (p, t) => p[p.length - 1][parent] = child(p, t) },
+      peg$c14 = function(parent, child) { return (p, t) => {
+            p[p.length - 1][parent] = child(p, t);
+            return p[p.length - 1];
+          }
+        },
       peg$c15 = ".",
       peg$c16 = peg$literalExpectation(".", false),
       peg$c17 = function(parent, child) {
@@ -1582,9 +1586,11 @@ function peg$parse(input, options) {
             return acc;
           }, {});
         // console.log(JSON.stringify(_.last(newParent), null, 2));
+        let value = _.isUndefined(_.last(outputByIndex).value) ? _.last(outputByIndex) : _.last(outputByIndex).value;
+        if (_.isObject(value)) outputTable = value;
         // Set table value
-        let result = _.merge(t.Table(), newParent[parentIndex], outputTable, { value: _.last(outputByIndex).value || _.last(outputByIndex) });
-        console.log(outputTable[0]);
+        let result = _.merge(t.Table(), newParent[parentIndex], outputTable, _.isObject(value) ? {} : { value });
+        // console.log(result);
         return result;
       };
     }

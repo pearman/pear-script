@@ -6,9 +6,22 @@ import { String } from './types/string';
 import { Boolean } from './types/boolean';
 let grammar = require('./grammar/grammar.js');
 
+let progTemplate = (pIn, types, statements) => {
+    let stringifyWithFunc = obj => 
+        JSON.stringify(obj, (key, val) => (typeof val === 'function') ? '' + val : val);
+    let compiledProg = statements.join(',\n');
+    let t = stringifyWithFunc(types);
+    let p = stringifyWithFunc(pIn);
+    return `
+let t = ${t};
+let p = [{}];
+let prog = [${compiledProg}]; 
+prog.map(statement => statement(p, t);
+`
+}
+
 export class Interpreter {
-    lastExecutionTime = -1;
-    parseTree = {}
+    lastExecutionTime = 0;
     types = {
         Number,
         String,
@@ -16,135 +29,30 @@ export class Interpreter {
         Table
     }
 
-    eval(prog, persistentTree = [{}]) {
-        let parseTree = {};
-        let output = null;
+    eval(prog, memory = [{}]) {
+        let result = null;
         let executionTime = null;
         try {
             let before = _.now();
-            let parseTree = grammar.parse(prog);
-            //console.log('' + parseTree);
-            output = _.map(parseTree, (value: any) => value(persistentTree, this.types));
-            if (_.isFunction(_.last(output))) (<any>_.last(output))(persistentTree, this.types);
-            console.log(persistentTree);
-            // this.parseTree = parseTree;
-            // output = this.evalParseTree(parseTree, _.merge({}, persistentTree, parseTree));
+            // Build a function for each statement
+            let statements = grammar.parse(prog);
+            // Execute each function sequentially
+            let output = _.map(statements, (statement: any) => statement(memory, this.types));
+            result = _.last(output);
             this.lastExecutionTime = _.now() - before;
         } catch (err) {
             throw err;
         }
-        return output;
-    }
-
-    precompute(prog, persistentTree = {}) {
-        let parseTree = null;
-        try {
-            let before = _.now();
-            let parsedCode = this.toTable(grammar.parse(prog));
-            parseTree = this.attemptToResolveKeys(parsedCode, parsedCode);
-            this.lastExecutionTime = _.now() - before;
-        } catch (err) {
-            throw err;
-        }
-        return parseTree;
-    }
-
-    evalParseTree(parseTreeIn, parent = null, noTableExecution = false) {
-        let parseTree = this.wrapPrimitive(parseTreeIn);
-        
-        // Handle Primitives
-        if (!_.isObject(parseTreeIn)) return parseTree;
-
-        // Handle Properties
-        if (_.has(parseTree, '_property'))
-            return this.evalParseTree(_.get(parent, parseTree._property), parent, true);
-
-        // Handle Methods
-        if (_.has(parseTree, '_method') && _.has(parseTree, '_args')) {
-            let table: any = _.get(parent, parseTree._method);
-            let args = _.map(parseTree._args, arg => this.evalParseTree(arg, parent, true));
-            // Is it a JS function
-            if (parent && _.isFunction(table)) {
-                args.unshift(parent);
-                return this.wrapPrimitive(table(args, parent));
-            }
-            if (_.isNil(table)) throw `Method '${parseTree._method}' undefined.`;
-            // Otherwise it's a pear-script table
-            let resolvedArgs = _.reduce(table._args, (acc, value:any, i) => {
-                return _.merge(acc, {[value._property]: args[i]});
-            }, {});
-            return this.evalParseTree(_.merge(table, resolvedArgs), _.merge({}, parent, table));
-        }
-
-        // Handle Method Chains
-        if (_.isArray(parseTree)) {
-            return _.reduce(parseTree, (acc, element) => {
-                if (!_.isObject(acc)) acc = this.wrapPrimitive(acc);
-                return this.evalParseTree(element, _.merge({}, parent, acc));
-            }, parent);
-        }
-
-        // Execute Table
-        if (noTableExecution) return parseTree;
-        let result = parseTree;
-        let maxKey = -1;
-        while (_.has(parseTree, ++maxKey))
-            result = this.evalParseTree(parseTree[maxKey], parent);
         return result;
     }
 
-    wrapPrimitive(statement) {
-        if (_.isNumber(statement)) 
-            return _.merge({}, Table(this), Number(this), {value: statement});
-        if (_.isBoolean(statement)) 
-            return _.merge({}, Table(this), Boolean(this), {value: statement});
-        if (_.isString(statement)) 
-            return _.merge({}, Table(this), String(this), {value: statement});
-        if (_.has(statement, '_args') && !_.has(statement, '_method')) // is Table
-            return _.merge({}, Table(this), statement);
-        return statement;
-    }
-
-    toTable(parseTree) {
-        let i = 0;
-        return _.reduce(parseTree, (acc, value: any) => {
-            // Is Primitive
-            if (!_.isObject(value) && !_.isArray(value))
-                return _.assign(acc, { [i++]: value });
-            // Is Comment
-            if (_.has(value, '_comment'))
-                return acc;
-            // Is Chain, Method, or Property
-            if (_.isArray(value) || _.has(value, '_method') || _.has(value, '_property'))
-                return _.assign(acc, { [i++]: value });
-            // Is Assignment
-            _.forEach(value, (value, key) => {
-                _.set(acc, key, value);
-            });
-            return acc;
-        }, {})
-    }
-
-    attemptToResolveKeys(parseTree, parent) {
-        if (!_.isObject(parseTree)) return parseTree;
-        return _.mapValues(parseTree, (value, key) => {
-            if (_.isArray(value) || _.has(value, '_method') || _.has(value, '_property')) {
-                try {
-                    let result =  this.evalParseTree(value, parent);
-                    return result.value || result;
-                } catch (err) {
-                    return value;
-                }
-            } else {
-                if (_.has(value, '_args') && value['_args'].length === 0) {
-                    try {
-                        return this.attemptToResolveKeys(value, _.merge({}, parent, parseTree));
-                    } catch (err) {
-                        return value;
-                    }
-                }
-            }
-            return value;
-        });
+    compile(prog, memory = [{}]) {
+        try {
+            // Build a function for each statement
+            let statements = grammar.parse(prog);
+            console.log(progTemplate(memory, this.types, statements));
+        } catch (err) {
+            throw err;
+        }
     }
 }

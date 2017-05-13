@@ -20,8 +20,10 @@
           return acc;
         }, {});
       // console.log(JSON.stringify(_.last(newParent), null, 2));
+      let value = _.isUndefined(_.last(outputByIndex).value) ? _.last(outputByIndex) : _.last(outputByIndex).value;
+      if (_.isObject(value)) outputTable = value;
       // Set table value
-      let result = _.merge(t.Table(), newParent[parentIndex], outputTable, { value: _.last(outputByIndex).value || _.last(outputByIndex) });
+      let result = _.merge(t.Table(), newParent[parentIndex], outputTable, _.isObject(value) ? {} : { value });
       // console.log(result);
       return result;
     };
@@ -49,7 +51,11 @@ ArgBlock
 	= "(" _ args:RawProperty* _ ")" { return args }
 
 Assignment
-  = parent:RawProperty _ ":" _ child:Chain { return (p, t) => p[p.length - 1][parent] = child(p, t) }
+  = parent:RawProperty _ ":" _ child:Chain { return (p, t) => {
+      p[p.length - 1][parent] = child(p, t);
+      return p[p.length - 1];
+    }
+  }
 
 Chain
   = parent:Object _ "." _ child:Chain {

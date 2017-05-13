@@ -10,7 +10,7 @@ var rl = readline.createInterface({
     output: process.stdout
 });
 var interpreter = new interpreter_1.Interpreter();
-var persistentTree = [{}];
+var memory = [{}];
 function print(output, time, printValue) {
     if (printValue === void 0) { printValue = true; }
     if (_.has(output, 'value') && printValue) {
@@ -20,10 +20,16 @@ function print(output, time, printValue) {
 }
 function read() {
     rl.question(chalk.green('pear-script> '), function (input) {
-        if (input.trim() !== 'exit') {
+        if (input.trim() === '/exit') {
+            rl.close();
+            return;
+        }
+        else if (input.trim() === '/memory') {
+            console.log(memory);
+        }
+        else {
             try {
-                var output = interpreter.eval(input, persistentTree);
-                persistentTree = _.merge(persistentTree, _.omitBy(interpreter.parseTree, function (value, key) { return _.isInteger(_.parseInt(key)) || _.startsWith('_'); }));
+                var output = interpreter.eval(input, memory);
                 print(output, interpreter.lastExecutionTime);
             }
             catch (err) {
@@ -34,15 +40,28 @@ function read() {
                 else
                     console.error(chalk.red(err));
             }
-            read();
         }
-        else {
-            rl.close();
-        }
+        read();
     });
 }
-if (process.argv.length > 2) {
-    fs.readFile(process.argv[2], 'utf8', function (err, file) {
+var argv = require('minimist')(process.argv.slice(2));
+if (_.has(argv, 'c')) {
+    fs.readFile(argv.c, 'utf8', function (err, file) {
+        if (err)
+            console.log(err);
+        else {
+            try {
+                interpreter.compile(file);
+            }
+            catch (err) {
+                console.error(chalk.red(err));
+            }
+        }
+        rl.close();
+    });
+}
+else if (argv['_'].length > 0) {
+    fs.readFile(argv['_'][0], 'utf8', function (err, file) {
         if (err)
             console.log(err);
         else {

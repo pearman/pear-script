@@ -1,6 +1,5 @@
 export declare class Interpreter {
     lastExecutionTime: number;
-    parseTree: {};
     types: {
         Number: (value: any) => {};
         String: (value: any) => {};
@@ -13,10 +12,6 @@ export declare class Interpreter {
             'length': (args: any, parent: any) => {};
         };
     };
-    eval(prog: any, persistentTree?: {}[]): any;
-    precompute(prog: any, persistentTree?: {}): any;
-    evalParseTree(parseTreeIn: any, parent?: any, noTableExecution?: boolean): any;
-    wrapPrimitive(statement: any): any;
-    toTable(parseTree: any): {};
-    attemptToResolveKeys(parseTree: any, parent: any): any;
+    eval(prog: any, memory?: {}[]): any;
+    compile(prog: any, memory?: {}[]): void;
 }
