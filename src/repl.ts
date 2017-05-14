@@ -23,7 +23,7 @@ function print(output, time, printValue = true) {
 }
 
 function read() {
-    rl.question(chalk.green('pear-script> '),  input => {
+    rl.question(chalk.green('pear-script> '), input => {
         if (input.trim() === '/exit') {
             rl.close();
             return;

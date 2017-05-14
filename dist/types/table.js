@@ -13,27 +13,43 @@ exports.Table = function (value) { return ({
             console.log(JSON.stringify(args[0], null, 2));
         return string_1.String(args[0]);
     },
+    'printTable': function (args) {
+        console.log(args[0]);
+        return args[0];
+    },
+    'printArray': function (args) {
+        var i = 0;
+        while (_.has(args[0], i)) {
+            if (_.has(args[0][i], 'value'))
+                console.log(args[0][i].value);
+            else
+                console.log(JSON.stringify(args[0][i], null, 2));
+            i++;
+        }
+    },
     'get': function (args) { return _.get(args[0], args[1].value); },
-    // 'map': (args, parent) => {
-    //   let i = 0;
-    //   let result = {_args: []};
-    //   while (_.has(args[0], i)) {
-    //     let res = interpreter.evalParseTree(args[1], _.merge({}, parent, {[args[1]._args[0]._property]: args[0][i]}));
-    //     result[i] = _.has(res, 'value') ? res.value : res;
-    //     i++;
-    //   }
-    //   return result;
-    // },
-    // 'sum': (args, parent) => {
-    //   let i = 0;
-    //   let result = 0;
-    //   while (_.has(args[0], i)) {
-    //     let res = interpreter.evalParseTree(args[0][i], _.merge({}, parent));
-    //     result += res.value;
-    //     i++;
-    //   }
-    //   return result;
-    // },
+    'map': function (args, parent) {
+        var i = 0;
+        var result = _.cloneDeep(args[0]);
+        while (_.has(args[0], i)) {
+            var res = args[1]([args[0], args[0][i]]);
+            result[i] = res;
+            i++;
+        }
+        return result;
+    },
+    'sum': function (args, p, t) {
+        var i = 0;
+        var result = 0;
+        while (_.has(args[0], i)) {
+            var res = args[0][i];
+            if (_.isFunction(res))
+                res = res(p, t);
+            result += res.value;
+            i++;
+        }
+        return number_1.Number(result);
+    },
     'length': function (args, parent) {
         var i = 0;
         while (_.has(args[0], i))

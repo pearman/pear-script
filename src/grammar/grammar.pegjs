@@ -15,15 +15,18 @@
       let newParent = p.concat(argMap);
       // Execute table
       let outputByIndex = block.map(statement => statement(newParent, t));
-      let outputTable = outputByIndex.reduce((acc, value, i) => {
-          acc[i] = value;
+      let index = 0;
+      let outputTable = outputByIndex.reduce((acc, value) => {
+          if (_.has(value, 'value')) {
+            acc[index] = value;
+            index++;
+          }
           return acc;
         }, {});
       // console.log(JSON.stringify(_.last(newParent), null, 2));
       let value = _.isUndefined(_.last(outputByIndex).value) ? _.last(outputByIndex) : _.last(outputByIndex).value;
-      if (_.isObject(value)) outputTable = value;
       // Set table value
-      let result = _.merge(t.Table(), newParent[parentIndex], outputTable, _.isObject(value) ? {} : { value });
+      let result = _.merge(t.Table(), newParent[parentIndex], outputTable, _.isObject(value) ? value : { value });
       // console.log(result);
       return result;
     };
